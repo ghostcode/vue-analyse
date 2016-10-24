@@ -13,7 +13,7 @@ export default function (Vue) {
    *                           options and the options passed
    *                           in to the constructor.
    */
-
+// 初始化入口
   Vue.prototype._init = function (options) {
     options = options || {}
 
