@@ -1,3 +1,5 @@
+// Vue 提供的一些简单 DOM 方法
+
 import {
   nextTick,
   inDoc,

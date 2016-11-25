@@ -22,7 +22,7 @@ import lifecycleAPI from './api/lifecycle'
  * @param {Object} [options]
  * @public
  */
-
+// 实例入口
 function Vue (options) {
   this._init(options)
 }

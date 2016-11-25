@@ -13,6 +13,7 @@ export const devtools = inBrowser && window.__VUE_DEVTOOLS_GLOBAL_HOOK__
 
 // UA sniffing for working around browser-specific quirks
 const UA = inBrowser && window.navigator.userAgent.toLowerCase()
+// 为何没有全部使用 test 来验证 ???
 export const isIE9 = UA && UA.indexOf('msie 9.0') > 0
 export const isAndroid = UA && UA.indexOf('android') > 0
 export const isIos = UA && /(iphone|ipad|ipod|ios)/i.test(UA)
@@ -58,24 +59,38 @@ export {
  * MutationObserver if it's available, and fallback to
  * setTimeout(0).
  *
- * @param {Function} cb
- * @param {Object} ctx
+ * @param {Function} cb 回调
+ * @param {Object} ctx  上下文
  */
 
+/**
+ * 异步执行一些延迟微任务，如果 MutationOberver 存在则使用，
+ * 否则降级到 -> setImmediate -> setTimeout(0);
+ */
+
+// 立即执行函数，整体是一个闭包，返回一个函数
 export const nextTick = (function () {
   var callbacks = []
   var pending = false
   var timerFunc
+
   function nextTickHandler () {
+
     pending = false
+
     var copies = callbacks.slice(0)
+
     callbacks = []
+
     for (var i = 0; i < copies.length; i++) {
       copies[i]()
     }
+
   }
 
   /* istanbul ignore if */
+  // 伊斯坦布尔（土耳其城市） ??? 什么鬼
+  //  存在 MutationObserver 并且不在微信和 iOS
   if (typeof MutationObserver !== 'undefined' && !(isWechat && isIos)) {
     var counter = 1
     var observer = new MutationObserver(nextTickHandler)
@@ -96,13 +111,20 @@ export const nextTick = (function () {
       : typeof global !== 'undefined' ? global : {}
     timerFunc = context.setImmediate || setTimeout
   }
+  // 返回的函数
   return function (cb, ctx) {
     var func = ctx
       ? function () { cb.call(ctx) }
       : cb
+
     callbacks.push(func)
-    if (pending) return
+
+    if (pending){
+        return
+    }
+
     pending = true
+
     timerFunc(nextTickHandler, 0)
   }
 })()

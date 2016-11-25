@@ -1,5 +1,6 @@
 import { mergeOptions } from '../../util/index'
 
+// 什么鬼???
 let uid = 0
 
 export default function (Vue) {
@@ -23,6 +24,7 @@ export default function (Vue) {
       ? this.$parent.$root
       : this
     this.$children = []
+    //  子 vue 实例的引用
     this.$refs = {}       // child vm references
     this.$els = {}        // element references
     this._watchers = []   // all watchers as an array
@@ -51,6 +53,7 @@ export default function (Vue) {
     this._isAttached =
     this._isBeingDestroyed =
     this._vForRemoving = false
+      
     this._unlinkFn = null
 
     // context:

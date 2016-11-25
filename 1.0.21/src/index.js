@@ -5,12 +5,15 @@ import config from './config'
 
 installGlobalAPI(Vue)
 
+// 版本号
 Vue.version = '1.0.21'
 
+//外界真正引入的地址，但是真正实例化是在 instance/vue 里面
 export default Vue
 
 // devtools global hook
 /* istanbul ignore next */
+// 开发工具检测
 setTimeout(() => {
   if (config.devtools) {
     if (devtools) {
