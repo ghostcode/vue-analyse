@@ -48,6 +48,7 @@ export default function (Vue) {
     this._fragmentEnd = null // @type {Text|Comment}
 
     // lifecycle state
+    //  什么周期的一些标记
     this._isCompiled =
     this._isDestroyed =
     this._isReady =

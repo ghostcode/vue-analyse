@@ -1,6 +1,7 @@
 import config from '../config'
 import { hyphenate } from './lang'
 
+// 调试信息集中以及添加更多调试信息
 let warn
 let formatComponentName
 
