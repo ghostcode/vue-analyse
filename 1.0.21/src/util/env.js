@@ -131,6 +131,8 @@ export const nextTick = (function () {
 
 let _Set
 /* istanbul ignore if */
+// 检测运行环境是否有 Set
+// Set.toString().match(/native code/) 这种验证方法还没见过，以前都是用特征检测
 if (typeof Set !== 'undefined' && Set.toString().match(/native code/)) {
   // use native Set when available.
   _Set = Set

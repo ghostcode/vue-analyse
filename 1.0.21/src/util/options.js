@@ -322,6 +322,15 @@ function guardArrayAssets (assets) {
  *                     an instantiation merge.
  */
 
+/**
+ * 合并两个对象到一个新的
+ * 用于实例化和继承
+ * @param parent
+ * @param child
+ * @param vm
+ * @returns {{}}
+ */
+
 export function mergeOptions (parent, child, vm) {
   guardComponents(child)
   guardProps(child)

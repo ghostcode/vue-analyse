@@ -28,6 +28,7 @@ function Vue (options) {
 }
 
 // install internals
+// 装在内部方法
 initMixin(Vue)
 stateMixin(Vue)
 eventsMixin(Vue)
@@ -35,6 +36,7 @@ lifecycleMixin(Vue)
 miscMixin(Vue)
 
 // install instance APIs
+// 装在实例方法
 dataAPI(Vue)
 domAPI(Vue)
 eventsAPI(Vue)

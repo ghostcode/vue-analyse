@@ -31,6 +31,7 @@ export default function (Vue) {
     this._directives = [] // all directives
 
     // a uid
+    //  干神马的???
     this._uid = uid++
 
     // a flag to avoid this being observed
