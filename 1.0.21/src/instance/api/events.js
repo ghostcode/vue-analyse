@@ -9,8 +9,9 @@ export default function (Vue) {
    */
 
   Vue.prototype.$on = function (event, fn) {
-    (this._events[event] || (this._events[event] = []))
-      .push(fn)
+    // 先检测是否有同名事件，无则赋值为空数组，最后把回调push
+    ( this._events[event] || (this._events[event] = []) ).push(fn)
+
     modifyListenerCount(this, event, 1)
     return this
   }
