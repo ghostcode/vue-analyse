@@ -6,17 +6,21 @@ let uid = 0
  * A dep is an observable that can have multiple
  * directives subscribing to it.
  *
+ * 一个观察者模式
  * @constructor
  */
 
 export default function Dep () {
   this.id = uid++
+  //  存储所有的订阅的Watcher
   this.subs = []
 }
 
 // the current target watcher being evaluated.
 // this is globally unique because there could be only one
 // watcher being evaluated at any time.
+
+// 当前正被处理的Watcher，全局唯一，且同一时间只有一个Watcher被计算。
 Dep.target = null
 
 /**

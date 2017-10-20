@@ -1,3 +1,5 @@
+// 超级简化版的underscore，lodash
+
 /**
  * Set a property on an object. Adds the new property and
  * triggers change notification if the property doesn't
@@ -236,6 +238,8 @@ export function bind (fn, ctx) {
  * @return {Array}
  */
 
+//将类数组转为真数组
+
 export function toArray (list, start) {
   start = start || 0
   var i = list.length - start
@@ -252,6 +256,8 @@ export function toArray (list, start) {
  * @param {Object} to
  * @param {Object} from
  */
+
+//
 
 export function extend (to, from) {
   var keys = Object.keys(from)

@@ -1,3 +1,5 @@
+//超级简化版的jquery
+
 import config from '../config'
 import { isIE9 } from './env'
 import { warn } from './debug'

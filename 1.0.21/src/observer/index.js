@@ -59,6 +59,8 @@ export function Observer (value) {
  * getter/setters. This method should only be called when
  * value type is Object.
  *
+ *  遍历每个属性，使其变为getter、setter。
+ *
  * @param {Object} obj
  */
 
@@ -84,6 +86,8 @@ Observer.prototype.observeArray = function (items) {
 /**
  * Convert a property into getter/setter so we can emit
  * the events when the property is accessed/changed.
+ *
+ * 把每个属性变为getter/setter之后，我们就可以当属性变化、属性获取时发出事件。
  *
  * @param {String} key
  * @param {*} val
@@ -186,6 +190,8 @@ export function observe (value, vm) {
 /**
  * Define a reactive property on an Object.
  *
+ * 使数据具有响应，依赖收集、通知变化。
+ *
  * @param {Object} obj
  * @param {String} key
  * @param {*} val
@@ -207,9 +213,11 @@ export function defineReactive (obj, key, val) {
   Object.defineProperty(obj, key, {
     enumerable: true,
     configurable: true,
+    //  依赖收集（把所有依赖此数据项的Watcher添加进数组）
     get: function reactiveGetter () {
       var value = getter ? getter.call(obj) : val
       if (Dep.target) {
+        //  添加进依赖数组
         dep.depend()
         if (childOb) {
           childOb.dep.depend()
@@ -223,8 +231,10 @@ export function defineReactive (obj, key, val) {
       }
       return value
     },
+    //  通知更新
     set: function reactiveSetter (newVal) {
       var value = getter ? getter.call(obj) : val
+      //  数据没有更改，退出
       if (newVal === value) {
         return
       }
@@ -234,6 +244,7 @@ export function defineReactive (obj, key, val) {
         val = newVal
       }
       childOb = observe(newVal)
+      // 调用依赖此数据项，订阅者的更新方法
       dep.notify()
     }
   })

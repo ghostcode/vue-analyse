@@ -52,6 +52,10 @@ export default function (Vue) {
    * @param {Boolean} remove
    * @param {Boolean} deferCleanup
    */
+  
+  /**
+   * 卸载、销毁 Vue 实例，简单的代理到内部方法
+   */
 
   Vue.prototype.$destroy = function (remove, deferCleanup) {
     this._destroy(remove, deferCleanup)
