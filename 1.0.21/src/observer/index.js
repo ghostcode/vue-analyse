@@ -39,7 +39,9 @@ export function withoutConversion (fn) {
 
 export function Observer (value) {
   this.value = value
+  //  这里有何用???
   this.dep = new Dep()
+  //  添加__ob__属性，标识数据已经被Observer观察过
   def(value, '__ob__', this)
   if (isArray(value)) {
     var augment = hasProto
@@ -66,6 +68,10 @@ export function Observer (value) {
 
 Observer.prototype.walk = function (obj) {
   var keys = Object.keys(obj)
+  //  为何不用forEach???
+  //   Object.keys(obj).forEach(key=>{
+  //       this.convert(key,obj[key])
+  //   })
   for (var i = 0, l = keys.length; i < l; i++) {
     this.convert(keys[i], obj[keys[i]])
   }
@@ -168,6 +174,7 @@ export function observe (value, vm) {
     return
   }
   var ob
+  //  若已经observer则返回之前的 __ob__
   if (
     hasOwn(value, '__ob__') &&
     value.__ob__ instanceof Observer
