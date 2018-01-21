@@ -35,10 +35,11 @@ export default function (Vue) {
 
   /**
    * Setup the scope of an instance, which contains:
-   * - observed data
-   * - computed properties
-   * - user methods
-   * - meta properties
+   * 设置实例的范围
+   * - observed data 观察数据
+   * - computed properties 计算属性
+   * - user methods 用户方法
+   * - meta properties 元数据属性
    */
 
   Vue.prototype._initState = function () {
@@ -88,6 +89,7 @@ export default function (Vue) {
     }
     var props = this._props
     // proxy data on instance
+    // 把 data 代理到实例上
     var keys = Object.keys(data)
     var i, key
     i = keys.length
@@ -110,6 +112,7 @@ export default function (Vue) {
       }
     }
     // observe data
+    //  从这里开始对data属性下的值进行 getter/setter处理
     observe(data, this)
   }
 
@@ -152,11 +155,15 @@ export default function (Vue) {
   /**
    * Proxy a property, so that
    * vm.prop === vm._data.prop
-   *
+   * 省去通過data访问数据源
+   * vm.data.xxx 变为 vm.xxx
+   * 为何不直接赋值呢？
+   * vm.name = vm.data.name
    * @param {String} key
    */
 
   Vue.prototype._proxy = function (key) {
+    //  是否为保留字：$ , _，若是则跳过代理
     if (!isReserved(key)) {
       // need to store ref to self here
       // because these getter/setters might

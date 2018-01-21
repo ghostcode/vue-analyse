@@ -72,6 +72,7 @@ export default function Directive (descriptor, vm, el, host, scope, frag) {
  * Initialize the directive, mixin definition properties,
  * setup the watcher, call definition bind() and update()
  * if present.
+ * 初始化指令，混入定义的属性，设置watcher,调用bind()和update()方法
  */
 
 Directive.prototype._bind = function () {
@@ -128,9 +129,12 @@ Directive.prototype._bind = function () {
     var postProcess = this._postProcess
       ? bind(this._postProcess, this)
       : null
+    // 依赖收集就发生在这里================================
+    //  把指令的表达式和更新方法传入构造函数
     var watcher = this._watcher = new Watcher(
       this.vm,
       this.expression,
+      // 指令和表达式的update方法传入
       this._update, // callback
       {
         filters: this.filters,

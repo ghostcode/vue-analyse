@@ -8,7 +8,7 @@ export default function (Vue) {
    * The main init sequence. This is called for every
    * instance, including ones that are created from extended
    * constructors.
-   *
+   * 主入口，每個實例都會調用，甚至包括通過extended構造的實例
    * @param {Object} options - this options object should be
    *                           the result of merging class
    *                           options and the options passed
@@ -20,9 +20,7 @@ export default function (Vue) {
 
     this.$el = null
     this.$parent = options.parent
-    this.$root = this.$parent
-      ? this.$parent.$root
-      : this
+    this.$root = this.$parent ? this.$parent.$root : this
     this.$children = []
     //  子 vue 实例的引用
     this.$refs = {}       // child vm references
@@ -86,6 +84,7 @@ export default function (Vue) {
     }
 
     // merge options.
+    //  合并入参
     options = this.$options = mergeOptions(
       this.constructor.options,
       options,

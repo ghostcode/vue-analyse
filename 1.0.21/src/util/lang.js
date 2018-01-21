@@ -91,13 +91,14 @@ export function isLiteral (exp) {
 
 /**
  * Check if a string starts with $ or _
- *
+ * 检测字符串是否以$和_开头
  * @param {String} str
  * @return {Boolean}
  */
 
 export function isReserved (str) {
   var c = (str + '').charCodeAt(0)
+  //???
   return c === 0x24 || c === 0x5F
 }
 
@@ -316,8 +317,8 @@ export const isArray = Array.isArray
 export function def (obj, key, val, enumerable) {
   Object.defineProperty(obj, key, {
     value: val,
-    enumerable: !!enumerable,
     writable: true,
+    enumerable: !!enumerable,
     configurable: true
   })
 }
@@ -392,7 +393,7 @@ export function cancellable (fn) {
 /**
  * Check if two values are loosely equal - that is,
  * if they are plain objects, do they have the same shape?
- *
+ * 宽松验证相等
  * @param {*} a
  * @param {*} b
  * @return {Boolean}
@@ -400,6 +401,7 @@ export function cancellable (fn) {
 
 export function looseEqual (a, b) {
   /* eslint-disable eqeqeq */
+  //若不等，则判断两个值是否为对象，若是，则转为字符串进行比较。
   return a == b || (
     isObject(a) && isObject(b)
       ? JSON.stringify(a) === JSON.stringify(b)

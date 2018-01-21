@@ -77,6 +77,7 @@ Watcher.prototype.get = function () {
   var scope = this.scope || this.vm
   var value
   try {
+    //  数据或表达式的依赖收集=====================
     value = this.getter.call(scope, scope)
   } catch (e) {
     if (
@@ -160,6 +161,7 @@ Watcher.prototype.set = function (value) {
 
 /**
  * Prepare for dependency collection.
+ * Dep.target就是Watcher实例
  */
 
 Watcher.prototype.beforeGet = function () {

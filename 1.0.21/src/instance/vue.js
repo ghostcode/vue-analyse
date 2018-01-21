@@ -13,7 +13,9 @@ import lifecycleAPI from './api/lifecycle'
  * The exposed Vue constructor.
  *
  * API conventions:
+ *  全局方法或属性以 $ 开头
  * - public API methods/properties are prefixed with `$`
+ *  内部方法或属性以 _ 开头
  * - internal methods/properties are prefixed with `_`
  * - non-prefixed properties are assumed to be proxied user
  *   data.
@@ -27,9 +29,15 @@ function Vue (options) {
   this._init(options)
 }
 
+//下面的方法调用都是向Vue的原型上添加方法，如下：
+
+// Vue.prototype.xxx = function () {
+//
+// }
+
 // install internals
 // 装在内部方法
-initMixin(Vue)
+initMixin(Vue) //主入口，初始化方法
 stateMixin(Vue)
 eventsMixin(Vue)
 lifecycleMixin(Vue)

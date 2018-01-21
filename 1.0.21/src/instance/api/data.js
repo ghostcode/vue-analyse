@@ -80,6 +80,7 @@ export default function (Vue) {
       parsed = parseDirective(expOrFn)
       expOrFn = parsed.expression
     }
+    // 每个组件实例都有watcher实例对象
     var watcher = new Watcher(vm, expOrFn, cb, {
       deep: options && options.deep,
       sync: options && options.sync,
@@ -177,7 +178,7 @@ export default function (Vue) {
   /**
    * "clean" a getter/setter converted object into a plain
    * object copy.
-   *
+   * Object拷贝
    * @param {Object} - obj
    * @return {Object}
    */

@@ -112,6 +112,8 @@ export default function (Vue) {
    * Initialize instance element. Called in the public
    * $mount() method.
    *
+   * 初始化实例元素，在全局$mount方法中调用
+   *
    * @param {Element} el
    */
 
@@ -134,7 +136,7 @@ export default function (Vue) {
 
   /**
    * Create and bind a directive to an element.
-   *
+   * 为元素创建和绑定一个指令
    * @param {Object} descriptor - parsed directive descriptor
    * @param {Node} node   - target node
    * @param {Vue} [host] - transclusion host component

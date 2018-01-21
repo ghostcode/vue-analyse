@@ -7,6 +7,7 @@ import {
   hasProto,
   hasOwn
 } from '../util/index'
+import Watcher from "../watcher";
 
 const arrayKeys = Object.getOwnPropertyNames(arrayMethods)
 
@@ -32,7 +33,7 @@ export function withoutConversion (fn) {
  * object. Once attached, the observer converts target
  * object's property keys into getter/setters that
  * collect dependencies and dispatches updates.
- *
+ * 收集依赖并通知更新
  * @param {Array|Object} value
  * @constructor
  */
@@ -61,7 +62,7 @@ export function Observer (value) {
  * getter/setters. This method should only be called when
  * value type is Object.
  *
- *  遍历每个属性，使其变为getter、setter。
+ *  仅当值是Object时，遍历每个属性，使其变为getter、setter。
  *
  * @param {Object} obj
  */
@@ -93,7 +94,7 @@ Observer.prototype.observeArray = function (items) {
  * Convert a property into getter/setter so we can emit
  * the events when the property is accessed/changed.
  *
- * 把每个属性变为getter/setter之后，我们就可以当属性变化、属性获取时发出事件。
+ * 把每个属性变为getter/setter之后，当属性变化或获取时我们就可以发出事件。
  *
  * @param {String} key
  * @param {*} val
@@ -186,6 +187,7 @@ export function observe (value, vm) {
     Object.isExtensible(value) &&
     !value._isVue
   ) {
+    // 递归遍历的过程不是应该是纯命令式的、面向过程的吗？
     ob = new Observer(value)
   }
   if (ob && vm) {
@@ -206,7 +208,7 @@ export function observe (value, vm) {
 
 export function defineReactive (obj, key, val) {
   var dep = new Dep()
-
+  // 获得对象上指定属性的描述符
   var property = Object.getOwnPropertyDescriptor(obj, key)
   if (property && property.configurable === false) {
     return
@@ -225,6 +227,21 @@ export function defineReactive (obj, key, val) {
       var value = getter ? getter.call(obj) : val
       if (Dep.target) {
         //  添加进依赖数组
+        //
+        //   Dep.prototype.depend = function () {
+        //       Dep.target.addDep(this)  => watch.addDep(this)
+        //   }
+
+          // Watcher.prototype.addDep = function (dep) {
+          //     var id = dep.id
+          //     if (!this.newDepIds.has(id)) {
+          //         this.newDepIds.add(id)
+          //         this.newDeps.push(dep)
+          //         if (!this.depIds.has(id)) {
+          //             dep.addSub(this)
+          //         }
+          //     }
+          // }
         dep.depend()
         if (childOb) {
           childOb.dep.depend()
@@ -241,7 +258,7 @@ export function defineReactive (obj, key, val) {
     //  通知更新
     set: function reactiveSetter (newVal) {
       var value = getter ? getter.call(obj) : val
-      //  数据没有更改，退出
+      //  数据没有更改，退出,這裡要是對象怎麼辦？或者說只要是對象就默認不等？
       if (newVal === value) {
         return
       }
@@ -252,6 +269,7 @@ export function defineReactive (obj, key, val) {
       }
       childOb = observe(newVal)
       // 调用依赖此数据项，订阅者的更新方法
+      // 通知订阅我这个dep的watcher们:我更新了
       dep.notify()
     }
   })
