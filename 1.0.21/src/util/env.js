@@ -89,7 +89,6 @@ export const nextTick = (function () {
   }
 
   /* istanbul ignore if */
-  // 伊斯坦布尔（土耳其城市） ??? 什么鬼
   //  存在 MutationObserver 并且不在微信和 iOS
   if (typeof MutationObserver !== 'undefined' && !(isWechat && isIos)) {
     var counter = 1

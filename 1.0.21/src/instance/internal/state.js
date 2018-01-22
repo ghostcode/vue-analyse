@@ -75,6 +75,7 @@ export default function (Vue) {
 
   /**
    * Initialize the data.
+   * 这里做了两件事：1.代理data属性；2.使data数据变成响应式
    */
 
   Vue.prototype._initData = function () {
@@ -257,6 +258,8 @@ export default function (Vue) {
    * Setup instance methods. Methods must be bound to the
    * instance since they might be passed down as a prop to
    * child components.
+   * 设置实例方法，方法必须绑定到当前实例，
+   * 因为它们有可能作为 prop 传给子组件。
    */
 
   Vue.prototype._initMethods = function () {

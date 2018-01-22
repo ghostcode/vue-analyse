@@ -102,6 +102,7 @@ export default function (Vue) {
     this._callHook('init')
 
     // initialize data observation and scope inheritance.
+    //  初始化数据观察和作用于继承
     this._initState()
 
     // setup event system and option events.

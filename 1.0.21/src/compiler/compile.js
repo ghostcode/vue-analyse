@@ -35,9 +35,13 @@ const DEFAULT_TERMINAL_PRIORITY = 2000
  * be called on instance root nodes, but can also be used
  * for partial compilation if the partial argument is true.
  *
+ * 编译模板，返回一个可重复使用的组合 link function.
+ *
  * The returned composite link function, when called, will
  * return an unlink function that tearsdown all directives
  * created during the linking phase.
+ *
+ * 当返回的组合 link function 被调用时，将会返回一个 unlink function，作用是销毁在 linking 阶段创建的所有指令。
  *
  * @param {Element|DocumentFragment} el
  * @param {Object} options

@@ -214,15 +214,17 @@ export function classify (str) {
 
 /**
  * Simple bind, faster than native
- *
+ * 简单的执行环境绑定，比原生的更快
  * @param {Function} fn
  * @param {Object} ctx
  * @return {Function}
  */
 
-export function bind (fn, ctx) {
+export function  bind (fn, ctx) {
   return function (a) {
     var l = arguments.length
+    //  尽量使用 call ，而不是 apply
+    // https://jsperf.com/call-apply-segu/53
     return l
       ? l > 1
         ? fn.apply(ctx, arguments)

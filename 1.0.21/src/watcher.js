@@ -78,6 +78,15 @@ Watcher.prototype.get = function () {
   var value
   try {
     //  数据或表达式的依赖收集=====================
+    //  这里就去获取属性的值，也就是触发 getter 方法。
+    //   Object.defineProperty(obj,key,{
+    //       get(){
+    //
+    //       },
+    //       set(){
+    //
+    //       }
+    //   })
     value = this.getter.call(scope, scope)
   } catch (e) {
     if (
