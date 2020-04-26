@@ -151,7 +151,7 @@ export default function (Vue) {
 
   /**
    * Plugin system
-   *
+   *    
    * @param {Object} plugin
    */
 
