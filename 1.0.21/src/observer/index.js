@@ -163,7 +163,7 @@ function copyAugment (target, src, keys) {
  * Attempt to create an observer instance for a value,
  * returns the new observer if successfully observed,
  * or the existing observer if the value already has one.
- *
+ * 设置观察者成功则返回处理后的，若之前处理过，则直接返回。
  * @param {*} value
  * @param {Vue} [vm]
  * @return {Observer|undefined}

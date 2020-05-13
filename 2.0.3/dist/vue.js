@@ -1,6 +1,6 @@
 /*!
  * Vue.js v2.0.3
- * (c) 2014-2016 Evan You
+ * (c) 2014-2020 Evan You
  * Released under the MIT License.
  */
 (function (global, factory) {
@@ -1187,7 +1187,7 @@ function del (obj, key) {
  * we cannot intercept array element access like property getters.
  */
 function dependArray (value) {
-  for (var e = void 0, i = 0, l = value.length; i < l; i++) {
+  for (var e = (void 0), i = 0, l = value.length; i < l; i++) {
     e = value[i];
     e && e.__ob__ && e.__ob__.dep.depend();
     if (Array.isArray(e)) {
@@ -5752,7 +5752,7 @@ function parseHTML (html, options) {
         }
       }
 
-      var text = void 0;
+      var text = (void 0);
       if (textEnd >= 0) {
         text = html.substring(0, textEnd);
         advance(textEnd);
@@ -6243,14 +6243,16 @@ function parse (
       }
 
       function checkRootConstraints (el) {
-        {
+        if ("development" !== 'production' && !warned) {
           if (el.tag === 'slot' || el.tag === 'template') {
+            warned = true;
             warn$1(
               "Cannot use <" + (el.tag) + "> as component root element because it may " +
               'contain multiple nodes:\n' + template
             );
           }
           if (el.attrsMap.hasOwnProperty('v-for')) {
+            warned = true;
             warn$1(
               'Cannot use v-for on stateful component root element because ' +
               'it renders multiple elements:\n' + template
@@ -6263,12 +6265,12 @@ function parse (
       if (!root) {
         root = element;
         checkRootConstraints(root);
-      } else if ("development" !== 'production' && !stack.length && !warned) {
+      } else if (!stack.length) {
         // allow 2 root elements with v-if and v-else
         if (root.if && element.else) {
           checkRootConstraints(element);
           root.elseBlock = element;
-        } else {
+        } else if ("development" !== 'production' && !warned) {
           warned = true;
           warn$1(
             ("Component template should contain exactly one root element:\n\n" + template)
@@ -7513,3 +7515,4 @@ Vue$3.compile = compileToFunctions;
 return Vue$3;
 
 })));
+//# sourceMappingURL=vue.js.map

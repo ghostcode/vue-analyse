@@ -101,6 +101,7 @@ export default function (Vue) {
       // 2. it's provided via a instantiation option AND there are no
       //    template prop present
       if (!props || !hasOwn(props, key)) {
+        //  方便数据访问 this.xxx 直接访问的是 this.data.xxx
         this._proxy(key)
       } else if (process.env.NODE_ENV !== 'production') {
         warn(
