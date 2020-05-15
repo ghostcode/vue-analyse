@@ -60,6 +60,7 @@ export default function Watcher (vm, expOrFn, cb, options) {
     this.getter = res.get
     this.setter = res.set
   }
+  // 执行的入口
   this.value = this.lazy
     ? undefined
     : this.get()
@@ -73,6 +74,7 @@ export default function Watcher (vm, expOrFn, cb, options) {
  */
 
 Watcher.prototype.get = function () {
+  // Dep.target = this
   this.beforeGet()
   var scope = this.scope || this.vm
   var value
@@ -87,6 +89,7 @@ Watcher.prototype.get = function () {
     //
     //       }
     //   })
+    // 这里是重点！！！
     value = this.getter.call(scope, scope)
   } catch (e) {
     if (
@@ -130,6 +133,7 @@ Watcher.prototype.set = function (value) {
     value = scope._applyFilters(
       value, this.value, this.filters, true)
   }
+  // 触发 observer 数据的 set 方法，之后触发更新操作
   try {
     this.setter.call(scope, scope, value)
   } catch (e) {
@@ -179,7 +183,7 @@ Watcher.prototype.beforeGet = function () {
 
 /**
  * Add a dependency to this directive.
- *
+ * 添加指令的收集器 dep
  * @param {Dep} dep
  */
 
@@ -220,7 +224,7 @@ Watcher.prototype.afterGet = function () {
 /**
  * Subscriber interface.
  * Will be called when a dependency changes.
- *
+ * 依赖变动会调用此方法
  * @param {Boolean} shallow
  */
 

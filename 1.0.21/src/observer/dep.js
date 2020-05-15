@@ -45,6 +45,8 @@ Dep.prototype.removeSub = function (sub) {
 
 /**
  * Add self as a dependency to the target watcher.
+ * 此时的 Dep.target 就是 Watcher 实例,接着调用实例方法 addDep ，同时把
+ * Dep 的实例添加到正在计算的 Watcher 中。
  */
 
 Dep.prototype.depend = function () {

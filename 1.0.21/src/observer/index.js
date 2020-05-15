@@ -40,7 +40,7 @@ export function withoutConversion (fn) {
 
 export function Observer (value) {
   this.value = value
-  //  这里有何用???
+  // 创建收集筐，这里为何要实例化一个 dep ???
   this.dep = new Dep()
   //  添加__ob__属性，标识数据已经被Observer观察过
   def(value, '__ob__', this)
@@ -187,7 +187,6 @@ export function observe (value, vm) {
     Object.isExtensible(value) &&
     !value._isVue
   ) {
-    // 递归遍历的过程不是应该是纯命令式的、面向过程的吗？
     ob = new Observer(value)
   }
   if (ob && vm) {
@@ -207,6 +206,7 @@ export function observe (value, vm) {
  */
 
 export function defineReactive (obj, key, val) {
+  // 每个属性都有自己的收集器
   var dep = new Dep()
   // 获得对象上指定属性的描述符
   var property = Object.getOwnPropertyDescriptor(obj, key)
@@ -227,21 +227,21 @@ export function defineReactive (obj, key, val) {
       var value = getter ? getter.call(obj) : val
       if (Dep.target) {
         //  添加进依赖数组
-        //
         //   Dep.prototype.depend = function () {
         //       Dep.target.addDep(this)  => watch.addDep(this)
         //   }
 
-          // Watcher.prototype.addDep = function (dep) {
-          //     var id = dep.id
-          //     if (!this.newDepIds.has(id)) {
-          //         this.newDepIds.add(id)
-          //         this.newDeps.push(dep)
-          //         if (!this.depIds.has(id)) {
-          //             dep.addSub(this)
-          //         }
-          //     }
-          // }
+        // Watcher.prototype.addDep = function (dep) {
+        //     var id = dep.id
+        //     if (!this.newDepIds.has(id)) {
+        //         this.newDepIds.add(id)
+        //         this.newDeps.push(dep)
+        //         if (!this.depIds.has(id)) {
+        //             dep.addSub(this)
+        //         }
+        //     }
+        // }
+        // 把 watcher 添加到收集器中
         dep.depend()
         if (childOb) {
           childOb.dep.depend()

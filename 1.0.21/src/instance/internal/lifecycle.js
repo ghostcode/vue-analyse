@@ -55,6 +55,7 @@ export default function (Vue) {
     // the template and caches the original attributes
     // on the container node and replacer node.
     var original = el
+    // 把 template 编译成 document fragment
     el = transclude(el, options)
     this._initElement(el)
 
@@ -79,6 +80,7 @@ export default function (Vue) {
     if (options._linkerCachable) {
       contentLinkFn = ctor.linker
       if (!contentLinkFn) {
+        // 指令解析
         contentLinkFn = ctor.linker = compile(el, options)
       }
     }

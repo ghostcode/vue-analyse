@@ -24,6 +24,7 @@ export default function (Vue) {
 
   Object.defineProperty(Vue.prototype, '$data', {
     get () {
+      // 这里就是 
       return this._data
     },
     set (newData) {
@@ -80,6 +81,7 @@ export default function (Vue) {
 
   Vue.prototype._initData = function () {
     var dataFn = this.$options.data
+    // 实例上挂在 this._data 属性指向配置项里的 data
     var data = this._data = dataFn ? dataFn() : {}
     if (!isPlainObject(data)) {
       data = {}
@@ -259,7 +261,7 @@ export default function (Vue) {
    * Setup instance methods. Methods must be bound to the
    * instance since they might be passed down as a prop to
    * child components.
-   * 设置实例方法，方法必须绑定到当前实例，
+   * 设置实例方法，方法必须绑定到当前实例(通过 bind 绑定 this)，
    * 因为它们有可能作为 prop 传给子组件。
    */
 

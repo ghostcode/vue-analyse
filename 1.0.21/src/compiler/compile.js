@@ -51,10 +51,12 @@ const DEFAULT_TERMINAL_PRIORITY = 2000
 
 export function compile (el, options, partial) {
   // link function for the node itself.
+  // 节点的解析
   var nodeLinkFn = partial || !options._asComponent
     ? compileNode(el, options)
     : null
   // link function for the childNodes
+  // 完成子节点的解析，遍历子节点，递归调用 compileNode。
   var childLinkFn =
     !(nodeLinkFn && nodeLinkFn.terminal) &&
     el.tagName !== 'SCRIPT' &&
@@ -280,7 +282,7 @@ export function compileRoot (el, options, contextOptions) {
 /**
  * Compile a node and return a nodeLinkFn based on the
  * node type.
- *
+ * 只处理元素和文本节点
  * @param {Node} node
  * @param {Object} options
  * @return {Function|null}
@@ -288,9 +290,12 @@ export function compileRoot (el, options, contextOptions) {
 
 function compileNode (node, options) {
   var type = node.nodeType
+  
   if (type === 1 && node.tagName !== 'SCRIPT') {
+    // 非 script 的普通标签
     return compileElement(node, options)
   } else if (type === 3 && node.data.trim()) {
+    // 非空文本节点
     return compileTextNode(node, options)
   } else {
     return null
@@ -372,6 +377,7 @@ function compileTextNode (node, options) {
   var el, token
   for (var i = 0, l = tokens.length; i < l; i++) {
     token = tokens[i]
+    // 查看是否为标签
     el = token.tag
       ? processTextToken(token, options)
       : document.createTextNode(token.value)
