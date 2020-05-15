@@ -1,5 +1,7 @@
 # Vue-analyse
 
+先分析的是 1.x 版本，后续再分析 2.x。
+
 核心概念：
 
     Observer , Compiler , Dep , Watcher
