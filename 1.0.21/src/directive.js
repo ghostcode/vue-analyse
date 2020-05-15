@@ -89,6 +89,7 @@ Directive.prototype._bind = function () {
   }
 
   // copy def properties
+  // 代理 update 方法到指令上
   var def = descriptor.def
   if (typeof def === 'function') {
     this.update = def
@@ -129,7 +130,6 @@ Directive.prototype._bind = function () {
     var postProcess = this._postProcess
       ? bind(this._postProcess, this)
       : null
-    //  依赖收集就发生在这里================================
     //  把指令的表达式和更新方法传入构造函数
     var watcher = this._watcher = new Watcher(
       this.vm,

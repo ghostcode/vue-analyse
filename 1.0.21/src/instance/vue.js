@@ -36,7 +36,7 @@ function Vue (options) {
 // }
 
 // install internals
-// 装在内部方法
+// 装载内部方法
 initMixin(Vue) //主入口，初始化方法
 stateMixin(Vue)
 eventsMixin(Vue)

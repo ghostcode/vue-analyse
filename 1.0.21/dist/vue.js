@@ -169,7 +169,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	// }
 	
 	// install internals
-	// 装在内部方法
+	// 装载内部方法
 	_internalInit2['default'](Vue); //主入口，初始化方法
 	_internalState2['default'](Vue);
 	_internalEvents2['default'](Vue);
@@ -2612,7 +2612,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function Observer(value) {
 	  this.value = value;
-	  //  这里有何用???
+	  // 创建收集筐，这里为何要实例化一个 dep ???
 	  this.dep = new _dep2['default']();
 	  //  添加__ob__属性，标识数据已经被Observer观察过
 	  _utilIndex.def(value, '__ob__', this);
@@ -2749,7 +2749,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (_utilIndex.hasOwn(value, '__ob__') && value.__ob__ instanceof Observer) {
 	    ob = value.__ob__;
 	  } else if (shouldConvert && (_utilIndex.isArray(value) || _utilIndex.isPlainObject(value)) && Object.isExtensible(value) && !value._isVue) {
-	    // 递归遍历的过程不是应该是纯命令式的、面向过程的吗？
 	    ob = new Observer(value);
 	  }
 	  if (ob && vm) {
@@ -2769,6 +2768,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	
 	function defineReactive(obj, key, val) {
+	  // 每个属性都有自己的收集器
 	  var dep = new _dep2['default']();
 	  // 获得对象上指定属性的描述符
 	  var property = Object.getOwnPropertyDescriptor(obj, key);
@@ -2789,7 +2789,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var value = getter ? getter.call(obj) : val;
 	      if (_dep2['default'].target) {
 	        //  添加进依赖数组
-	        //
 	        //   Dep.prototype.depend = function () {
 	        //       Dep.target.addDep(this)  => watch.addDep(this)
 	        //   }
@@ -2804,6 +2803,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        //         }
 	        //     }
 	        // }
+	        // 把 watcher 添加到收集器中
 	        dep.depend();
 	        if (childOb) {
 	          childOb.dep.depend();
@@ -2893,6 +2893,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	/**
 	 * Add self as a dependency to the target watcher.
+	 * 此时的 Dep.target 就是 Watcher 实例,接着调用实例方法 addDep ，同时把
+	 * Dep 的实例添加到正在计算的 Watcher 实例的依赖中。
 	 */
 	
 	Dep.prototype.depend = function () {
@@ -3049,6 +3051,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  this.vm = vm;
 	  vm._watchers.push(this);
 	  this.expression = expOrFn;
+	  // 指令的 _update,就是更新方法
 	  this.cb = cb;
 	  this.id = ++uid; // uid for batching
 	  this.active = true;
@@ -3067,6 +3070,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.getter = res.get;
 	    this.setter = res.set;
 	  }
+	  // 执行的入口
 	  this.value = this.lazy ? undefined : this.get();
 	  // state for avoiding false triggers for deep and Array
 	  // watchers during vm._digest()
@@ -3078,6 +3082,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	
 	Watcher.prototype.get = function () {
+	  // Dep.target = this
 	  this.beforeGet();
 	  var scope = this.scope || this.vm;
 	  var value;
@@ -3092,6 +3097,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    //
 	    //       }
 	    //   })
+	    // 这里是重点！！！
 	    value = this.getter.call(scope, scope);
 	  } catch (e) {
 	    if (("development") !== 'production' && _config2['default'].warnExpressionErrors) {
@@ -3127,6 +3133,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (this.filters) {
 	    value = scope._applyFilters(value, this.value, this.filters, true);
 	  }
+	  // 触发 observer 数据的 set 方法，之后触发更新操作
 	  try {
 	    this.setter.call(scope, scope, value);
 	  } catch (e) {
@@ -3163,7 +3170,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	/**
 	 * Add a dependency to this directive.
-	 *
+	 * 添加指令对应的收集器 dep
 	 * @param {Dep} dep
 	 */
 	
@@ -3173,6 +3180,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.newDepIds.add(id);
 	    this.newDeps.push(dep);
 	    if (!this.depIds.has(id)) {
+	      // 把 Watcher 实例添加到 dep 的订阅者中。
 	      dep.addSub(this);
 	    }
 	  }
@@ -3204,7 +3212,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	 * Subscriber interface.
 	 * Will be called when a dependency changes.
-	 *
+	 * 依赖变动会调用此方法
 	 * @param {Boolean} shallow
 	 */
 	
@@ -3230,6 +3238,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	 * Batcher job interface.
 	 * Will be called by the batcher.
+	 * 供 batcher 调用的方法
 	 */
 	
 	Watcher.prototype.run = function () {
@@ -3954,11 +3963,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	/**
 	 * Flush both queues and run the watchers.
+	 * 优先执行模板对应的 Watcher，之后再执行 $watch 的，确保 DOM 节点优先更新
 	 */
 	
 	function flushBatcherQueue() {
+	  // queue 是模板解析的指令对应的 Watcher
 	  runBatcherQueue(queue);
 	  internalQueueDepleted = true;
+	  // userQueue 是指用户通过 $watch 方法注册的 Watcher
 	  runBatcherQueue(userQueue);
 	  // dev tool hook
 	  /* istanbul ignore if */
@@ -3970,7 +3982,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	/**
 	 * Run the watchers in a single queue.
-	 *
+	 * 
 	 * @param {Array} queue
 	 */
 	
@@ -3997,7 +4009,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Push a watcher into the watcher queue.
 	 * Jobs with duplicate IDs will be skipped unless it's
 	 * pushed when the queue is being flushed.
-	 *
+	 * 
+	 * pushWatcher 方法把 Watcher 推入队列中，通过 nextTick 方法在下一个事件循环周期处理 Watcher 队列，这是 Vue.js的一种性能优化手段。
+	 * 
 	 * @param {Watcher} watcher
 	 *   properties:
 	 *   - {Number} id
@@ -4058,6 +4072,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  Object.defineProperty(Vue.prototype, '$data', {
 	    get: function get() {
+	      // 这里就是
 	      return this._data;
 	    },
 	    set: function set(newData) {
@@ -4109,6 +4124,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  Vue.prototype._initData = function () {
 	    var dataFn = this.$options.data;
+	    // 实例上挂在 this._data 属性指向配置项里的 data
 	    var data = this._data = dataFn ? dataFn() : {};
 	    if (!_utilIndex.isPlainObject(data)) {
 	      data = {};
@@ -4273,7 +4289,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * Setup instance methods. Methods must be bound to the
 	   * instance since they might be passed down as a prop to
 	   * child components.
-	   * 设置实例方法，方法必须绑定到当前实例，
+	   * 设置实例方法，方法必须绑定到当前实例(通过 bind 绑定 this)，
 	   * 因为它们有可能作为 prop 传给子组件。
 	   */
 	
@@ -4391,8 +4407,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function compile(el, options, partial) {
 	  // link function for the node itself.
+	  // 节点的解析
 	  var nodeLinkFn = partial || !options._asComponent ? compileNode(el, options) : null;
 	  // link function for the childNodes
+	  // 完成子节点的解析，遍历子节点，递归调用 compileNode。
 	  var childLinkFn = !(nodeLinkFn && nodeLinkFn.terminal) && el.tagName !== 'SCRIPT' && el.hasChildNodes() ? compileNodeList(el.childNodes, options) : null;
 	
 	  /**
@@ -4605,7 +4623,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	 * Compile a node and return a nodeLinkFn based on the
 	 * node type.
-	 *
+	 * 只处理元素和文本节点
 	 * @param {Node} node
 	 * @param {Object} options
 	 * @return {Function|null}
@@ -4613,9 +4631,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function compileNode(node, options) {
 	  var type = node.nodeType;
+	
 	  if (type === 1 && node.tagName !== 'SCRIPT') {
+	    // 非 script 的普通标签
 	    return compileElement(node, options);
 	  } else if (type === 3 && node.data.trim()) {
+	    // 非空文本节点
 	    return compileTextNode(node, options);
 	  } else {
 	    return null;
@@ -4692,11 +4713,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    next._skip = true;
 	    next = next.nextSibling;
 	  }
-	
+	  // 创建 document fragment
 	  var frag = document.createDocumentFragment();
 	  var el, token;
 	  for (var i = 0, l = tokens.length; i < l; i++) {
 	    token = tokens[i];
+	    // 查看是否为标签
 	    el = token.tag ? processTextToken(token, options) : document.createTextNode(token.value);
 	    frag.appendChild(el);
 	  }
@@ -9539,6 +9561,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    if (options._linkerCachable) {
 	      contentLinkFn = ctor.linker;
 	      if (!contentLinkFn) {
+	        // 指令解析
 	        contentLinkFn = ctor.linker = _compilerIndex.compile(el, options);
 	      }
 	    }
@@ -9816,6 +9839,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	
 	  // copy def properties
+	  // 代理 update 方法到指令上
 	  var def = descriptor.def;
 	  if (typeof def === 'function') {
 	    this.update = def;
@@ -9848,7 +9872,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	    var preProcess = this._preProcess ? _utilIndex.bind(this._preProcess, this) : null;
 	    var postProcess = this._postProcess ? _utilIndex.bind(this._postProcess, this) : null;
-	    //  依赖收集就发生在这里================================
 	    //  把指令的表达式和更新方法传入构造函数
 	    var watcher = this._watcher = new _watcher2['default'](this.vm, this.expression,
 	    // 指令和表达式的update方法传入

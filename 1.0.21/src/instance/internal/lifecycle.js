@@ -55,7 +55,6 @@ export default function (Vue) {
     // the template and caches the original attributes
     // on the container node and replacer node.
     var original = el
-    // 把 template 编译成 document fragment
     el = transclude(el, options)
     this._initElement(el)
 

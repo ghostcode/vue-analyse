@@ -34,11 +34,14 @@ function resetBatcherState () {
 
 /**
  * Flush both queues and run the watchers.
+ * 优先执行模板对应的 Watcher，之后再执行 $watch 的，确保 DOM 节点优先更新
  */
 
 function flushBatcherQueue () {
+  // queue 是模板解析的指令对应的 Watcher 
   runBatcherQueue(queue)
   internalQueueDepleted = true
+  // userQueue 是指用户通过 $watch 方法注册的 Watcher
   runBatcherQueue(userQueue)
   // dev tool hook
   /* istanbul ignore if */
@@ -50,7 +53,7 @@ function flushBatcherQueue () {
 
 /**
  * Run the watchers in a single queue.
- *
+ * 
  * @param {Array} queue
  */
 
@@ -81,7 +84,9 @@ function runBatcherQueue (queue) {
  * Push a watcher into the watcher queue.
  * Jobs with duplicate IDs will be skipped unless it's
  * pushed when the queue is being flushed.
- *
+ * 
+ * pushWatcher 方法把 Watcher 推入队列中，通过 nextTick 方法在下一个事件循环周期处理 Watcher 队列，这是 Vue.js的一种性能优化手段。
+ * 
  * @param {Watcher} watcher
  *   properties:
  *   - {Number} id

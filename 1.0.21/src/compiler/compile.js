@@ -372,7 +372,7 @@ function compileTextNode (node, options) {
     next._skip = true
     next = next.nextSibling
   }
-
+  // 创建 document fragment
   var frag = document.createDocumentFragment()
   var el, token
   for (var i = 0, l = tokens.length; i < l; i++) {

@@ -42,6 +42,7 @@ export default function Watcher (vm, expOrFn, cb, options) {
   this.vm = vm
   vm._watchers.push(this)
   this.expression = expOrFn
+  // 指令的 _update,就是更新方法
   this.cb = cb
   this.id = ++uid // uid for batching
   this.active = true
@@ -183,7 +184,7 @@ Watcher.prototype.beforeGet = function () {
 
 /**
  * Add a dependency to this directive.
- * 添加指令的收集器 dep
+ * 添加指令对应的收集器 dep
  * @param {Dep} dep
  */
 
@@ -193,6 +194,7 @@ Watcher.prototype.addDep = function (dep) {
     this.newDepIds.add(id)
     this.newDeps.push(dep)
     if (!this.depIds.has(id)) {
+      // 把 Watcher 实例添加到 dep 的订阅者中。
       dep.addSub(this)
     }
   }
@@ -254,6 +256,7 @@ Watcher.prototype.update = function (shallow) {
 /**
  * Batcher job interface.
  * Will be called by the batcher.
+ * 供 batcher 调用的方法
  */
 
 Watcher.prototype.run = function () {
