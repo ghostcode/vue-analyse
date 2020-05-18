@@ -7,14 +7,15 @@
 </head>
 <body>
   <div id="app">
-    Hello {{message}}
+    Hello {{message + name}}
   </div>
   <script src="./dist/vue.js"></script>
   <script>
     let vm = new Vue({
       el:'#app',
       data:{
-        message:'hi'
+        message:'hi',
+        name:'zhangsan',
       }
     })
   </script>

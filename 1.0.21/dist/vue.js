@@ -2656,7 +2656,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Observer.prototype.observeArray = function (items) {
 	  for (var i = 0, l = items.length; i < l; i++) {
-	    observe(items[i]);
+	    obsezrve(items[i]);
 	  }
 	};
 	
