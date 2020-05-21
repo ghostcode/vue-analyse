@@ -14,7 +14,7 @@ export default function (Vue) {
    *                           options and the options passed
    *                           in to the constructor.
    */
-// 初始化入口
+  // 初始化入口
   Vue.prototype._init = function (options) {
     options = options || {}
 
@@ -53,7 +53,7 @@ export default function (Vue) {
     this._isAttached =
     this._isBeingDestroyed =
     this._vForRemoving = false
-      
+
     this._unlinkFn = null
 
     // context:
@@ -102,7 +102,7 @@ export default function (Vue) {
     this._callHook('init')
 
     // initialize data observation and scope inheritance.
-    //  初始化数据观察和作用于继承
+    // 数据监测以及代理数据到实例
     this._initState()
 
     // setup event system and option events.

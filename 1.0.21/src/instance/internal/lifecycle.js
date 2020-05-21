@@ -36,7 +36,7 @@ export default function (Vue) {
 
   /**
    * Transclude, compile and link element.
-   *
+   * 内嵌、编译和链接元素
    * If a pre-compiled linker is available, that means the
    * passed in element will be pre-transcluded and compiled
    * as well - all we need to do is to call the linker.
@@ -55,10 +55,12 @@ export default function (Vue) {
     // the template and caches the original attributes
     // on the container node and replacer node.
     var original = el
+    // 把 template 编译成 DOM
     el = transclude(el, options)
     this._initElement(el)
 
     // handle v-pre on root node (#2026)
+    // 若是 v-pre 指令就什么也不用做
     if (el.nodeType === 1 && getAttr(el, 'v-pre') !== null) {
       return
     }
@@ -79,7 +81,9 @@ export default function (Vue) {
     if (options._linkerCachable) {
       contentLinkFn = ctor.linker
       if (!contentLinkFn) {
-        // 指令解析
+        // 遍历模板解析出模板里的指令
+        // 将指令解析成为指令描述对象 (descriptor)，闭包在了 link 函数里，
+        // link 函数会把 descriptor 传入 Directive 构造函数，创建出真正的指令实例
         contentLinkFn = ctor.linker = compile(el, options)
       }
     }
@@ -101,6 +105,7 @@ export default function (Vue) {
     }
 
     // finally replace original
+    // 输出到 DOM Tree 中
     if (options.replace) {
       replace(original, el)
     }

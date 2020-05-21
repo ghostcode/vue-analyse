@@ -110,8 +110,10 @@ function linkAndCapture (linker, vm) {
   var originalDirCount = vm._directives.length
   linker()
   var dirs = vm._directives.slice(originalDirCount)
+  // 指令排序
   dirs.sort(directiveComparator)
   for (var i = 0, l = dirs.length; i < l; i++) {
+    // 实例化 Watcher 同时把指令的上更新方法 update 作为参数传入
     dirs[i]._bind()
   }
   return dirs
@@ -119,7 +121,7 @@ function linkAndCapture (linker, vm) {
 
 /**
  * Directive priority sort comparator
- *
+ * 指令优先级排序
  * @param {Object} a
  * @param {Object} b
  */
@@ -215,6 +217,7 @@ export function compileRoot (el, options, contextOptions) {
 
   // only need to compile other attributes for
   // non-fragment instances
+  // 不是有 isFragment 这个方法吗 ？
   if (el.nodeType !== 11) {
     // for components, container and replacer need to be
     // compiled separately and linked in different scopes.
@@ -290,7 +293,7 @@ export function compileRoot (el, options, contextOptions) {
 
 function compileNode (node, options) {
   var type = node.nodeType
-  
+
   if (type === 1 && node.tagName !== 'SCRIPT') {
     // 非 script 的普通标签
     return compileElement(node, options)
@@ -426,6 +429,7 @@ function processTextToken (token, options) {
     var parsed = parseDirective(token.value)
     token.descriptor = {
       name: type,
+      // 映射指令系统
       def: publicDirectives[type],
       expression: parsed.expression,
       filters: parsed.filters

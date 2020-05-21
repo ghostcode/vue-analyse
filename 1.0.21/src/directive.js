@@ -89,7 +89,7 @@ Directive.prototype._bind = function () {
   }
 
   // copy def properties
-  // 代理 update 方法到指令上
+  // 扩展 def（bind、update） 到指令上面，其实就是指令里面的方法
   var def = descriptor.def
   if (typeof def === 'function') {
     this.update = def
@@ -151,6 +151,7 @@ Directive.prototype._bind = function () {
     if (this.afterBind) {
       this.afterBind()
     } else if (this.update) {
+      // 调用指令上的更新方法
       this.update(watcher.value)
     }
   }

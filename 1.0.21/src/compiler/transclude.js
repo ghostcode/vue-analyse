@@ -34,6 +34,7 @@ export function transclude (el, options) {
   // assuming the same object will be used for compile
   // right after this.
   if (options) {
+    // 取出容器上的所有属性
     options._containerAttrs = extractAttrs(el)
   }
   // for template tags, what we want is its content as
@@ -75,8 +76,10 @@ function transcludeTemplate (el, options) {
   if (frag) {
     var replacer = frag.firstChild
     var tag = replacer.tagName && replacer.tagName.toLowerCase()
+    // 替换根结点
     if (options.replace) {
       /* istanbul ignore if */
+      // 挂载节点为 body 则提醒
       if (el === document.body) {
         process.env.NODE_ENV !== 'production' && warn(
           'You are mounting an instance with a template to ' +
@@ -110,6 +113,7 @@ function transcludeTemplate (el, options) {
         return replacer
       }
     } else {
+      // 若不是替换根结点则直接添加 frag 到挂载节点里
       el.appendChild(frag)
       return el
     }

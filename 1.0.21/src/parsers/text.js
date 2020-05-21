@@ -72,6 +72,7 @@ export function parseText (text) {
     html = htmlRE.test(match[0])
     value = html ? match[1] : match[2]
     first = value.charCodeAt(0)
+    // 为何要判断 * ？
     oneTime = first === 42 // *
     value = oneTime
       ? value.slice(1)

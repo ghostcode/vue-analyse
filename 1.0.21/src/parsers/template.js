@@ -103,6 +103,7 @@ function stringToFragment (templateString, raw) {
 
   if (!tagMatch && !entityMatch) {
     // text only, return a single text node.
+    // 纯文本模式
     frag.appendChild(
       document.createTextNode(templateString)
     )
