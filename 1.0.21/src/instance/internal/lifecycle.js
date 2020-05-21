@@ -36,7 +36,7 @@ export default function (Vue) {
 
   /**
    * Transclude, compile and link element.
-   * 内嵌、编译和链接元素
+   * 内嵌(template 编译为 DOM 然后嵌入或者替换 el 元素)、编译和链接元素
    * If a pre-compiled linker is available, that means the
    * passed in element will be pre-transcluded and compiled
    * as well - all we need to do is to call the linker.
