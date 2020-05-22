@@ -76,8 +76,8 @@ function transcludeTemplate (el, options) {
   if (frag) {
     var replacer = frag.firstChild
     var tag = replacer.tagName && replacer.tagName.toLowerCase()
-    // 替换根结点
     if (options.replace) {
+      // 替换根结点
       /* istanbul ignore if */
       // 挂载节点为 body 则提醒
       if (el === document.body) {
@@ -109,6 +109,7 @@ function transcludeTemplate (el, options) {
         return frag
       } else {
         options._replacerAttrs = extractAttrs(replacer)
+        // 根元素和替换元素属性值合并
         mergeAttrs(el, replacer)
         return replacer
       }

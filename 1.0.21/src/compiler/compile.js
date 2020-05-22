@@ -359,7 +359,15 @@ function compileTextNode (node, options) {
   if (node._skip) {
     return removeText
   }
-
+  // tokens.push({
+  //   tag: true,
+  //   value: value.trim(),
+  //   html: html,
+  //   oneTime: oneTime
+  // })
+  // tokens.push({
+  //   value: value.trim(),
+  // })
   var tokens = parseText(node.wholeText)
   if (!tokens) {
     return null
@@ -375,10 +383,11 @@ function compileTextNode (node, options) {
     next._skip = true
     next = next.nextSibling
   }
-  // 创建 document fragment
+  // 根据 tokens, 创建 document fragment
   var frag = document.createDocumentFragment()
   var el, token
   for (var i = 0, l = tokens.length; i < l; i++) {
+    // token 这里是对象，利用引用类型的性质在 processTextToken 中进行修改则直接改动了 tokens 数组里面的数值。
     token = tokens[i]
     // 查看是否为标签
     el = token.tag
@@ -386,6 +395,14 @@ function compileTextNode (node, options) {
       : document.createTextNode(token.value)
     frag.appendChild(el)
   }
+  // 这里的 tokens 已经是扩展后
+  // token.descriptor = {
+  //   name: type,
+  //   // 映射指令系统
+  //   def: publicDirectives[type], // 这里就是指令的具体方法
+  //   expression: parsed.expression,
+  //   filters: parsed.filters
+  // }
   return makeTextNodeLinkFn(tokens, frag, options)
 }
 
@@ -402,7 +419,7 @@ function removeText (vm, node) {
 
 /**
  * Process a single text token.
- *
+ * 创建 DOM 节点和扩展 token 对象，添加一个 descriptor 属性
  * @param {Object} token
  * @param {Object} options
  * @return {Node}
@@ -718,6 +735,7 @@ function compileDirectives (attrs, options) {
     } else
 
     // event handlers
+    // const onRE = /^v-on:|^@/
     if (onRE.test(name)) {
       arg = name.replace(onRE, '')
       pushDir('on', publicDirectives.on)

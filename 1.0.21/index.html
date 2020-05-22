@@ -7,13 +7,15 @@
 </head>
 <body>
   <div id="app">
-    Hello {{message + name}}
-    userName: {{user.name.level}}
+    <!-- Hello -->
+    <!-- <Hello>Vue！</Hello> -->
+    hello
+    {{message + name}}
+    <!-- userName: {{user.name.level}} -->
   </div>
   <script src="./dist/vue.js"></script>
   <script>
     let vm = new Vue({
-      el:'#app',
       data:{
         message:'hi',
         name:'zhangsan',
@@ -24,6 +26,12 @@
         }
       }
     })
+
+    // Vue.component('hello',{
+    //   template:'<h1>Hello <slot></slot>!</h1>'
+    // })
+
+    vm.$mount('#app')
 
     setTimeout(()=>{
       // vm._data.message = 'hi'

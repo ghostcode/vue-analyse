@@ -1601,6 +1601,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (!tagRE.test(text)) {
 	    return null;
 	  }
+	  // 处理插值文本节点（ {{world}} ）
 	  var tokens = [];
 	  var lastIndex = tagRE.lastIndex = 0;
 	  var match, index, html, value, first, oneTime;
@@ -4709,7 +4710,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (node._skip) {
 	    return removeText;
 	  }
-	
+	  // tokens.push({
+	  //   tag: true,
+	  //   value: value.trim(),
+	  //   html: html,
+	  //   oneTime: oneTime
+	  // })
+	  // tokens.push({
+	  //   value: value.trim(),
+	  // })
 	  var tokens = _parsersText.parseText(node.wholeText);
 	  if (!tokens) {
 	    return null;
@@ -4725,15 +4734,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	    next._skip = true;
 	    next = next.nextSibling;
 	  }
-	  // 创建 document fragment
+	  // 根据 tokens, 创建 document fragment
 	  var frag = document.createDocumentFragment();
 	  var el, token;
 	  for (var i = 0, l = tokens.length; i < l; i++) {
+	    // token 这里是对象，利用引用类型的性质在 processTextToken 中进行修改则直接改动了 tokens 数组里面的数值。
 	    token = tokens[i];
 	    // 查看是否为标签
 	    el = token.tag ? processTextToken(token, options) : document.createTextNode(token.value);
 	    frag.appendChild(el);
 	  }
+	  // 这里的 tokens 已经是扩展后
+	  // token.descriptor = {
+	  //   name: type,
+	  //   // 映射指令系统
+	  //   def: publicDirectives[type], // 这里就是指令的具体方法
+	  //   expression: parsed.expression,
+	  //   filters: parsed.filters
+	  // }
 	  return makeTextNodeLinkFn(tokens, frag, options);
 	}
 	
@@ -4750,7 +4768,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	/**
 	 * Process a single text token.
-	 *
+	 * 创建 DOM 节点和扩展 token 对象，添加一个 descriptor 属性
 	 * @param {Object} token
 	 * @param {Object} options
 	 * @return {Node}
@@ -5055,6 +5073,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      } else
 	
 	        // event handlers
+	        // const onRE = /^v-on:|^@/
 	        if (onRE.test(name)) {
 	          arg = name.replace(onRE, '');
 	          pushDir('on', _directivesPublicIndex2['default'].on);
@@ -5412,7 +5431,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var prefix = wrap[1];
 	    var suffix = wrap[2];
 	    var node = document.createElement('div');
-	    // 文本修订比如传入的是 <td></td> 则需要在其外层添加 tr 、tbody、table 后才能直接添加到文档碎片中。
+	    // 文本内容修订比如传入的是 <td></td> 则需要在其外层添加 tr 、tbody、table 后才能直接添加到文档碎片中。
 	    node.innerHTML = prefix + templateString + suffix;
 	    while (depth--) {
 	      node = node.lastChild;
@@ -9170,8 +9189,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (frag) {
 	    var replacer = frag.firstChild;
 	    var tag = replacer.tagName && replacer.tagName.toLowerCase();
-	    // 替换根结点
 	    if (options.replace) {
+	      // 替换根结点
 	      /* istanbul ignore if */
 	      // 挂载节点为 body 则提醒
 	      if (el === document.body) {
@@ -9196,6 +9215,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return frag;
 	      } else {
 	        options._replacerAttrs = extractAttrs(replacer);
+	        // 根元素和替换元素属性值合并
 	        mergeAttrs(el, replacer);
 	        return replacer;
 	      }
@@ -9548,7 +9568,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * as well - all we need to do is to call the linker.
 	   *
 	   * Otherwise we need to call transclude/compile/link here.
-	   *
+	   * 编译过程主要是对元素的属性进行提取，然后生成对应的指令实例，接着执行编译生成的 linker 函数，也就是对所有
+	   * 生成的指令执行 bind ，并对其添加响应式处理。
 	   * @param {Element} el
 	   */
 	

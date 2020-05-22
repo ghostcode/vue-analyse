@@ -55,6 +55,7 @@ export function parseText (text) {
   if (!tagRE.test(text)) {
     return null
   }
+  // 处理插值文本节点（ {{world}} ）
   var tokens = []
   var lastIndex = tagRE.lastIndex = 0
   var match, index, html, value, first, oneTime

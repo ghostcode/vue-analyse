@@ -42,7 +42,8 @@ export default function (Vue) {
    * as well - all we need to do is to call the linker.
    *
    * Otherwise we need to call transclude/compile/link here.
-   *
+   * 编译过程主要是对元素的属性进行提取，然后生成对应的指令实例，接着执行编译生成的 linker 函数，也就是对所有
+   * 生成的指令执行 bind ，并对其添加响应式处理。
    * @param {Element} el
    */
 

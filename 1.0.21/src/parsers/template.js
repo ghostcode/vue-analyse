@@ -115,7 +115,7 @@ function stringToFragment (templateString, raw) {
     var prefix = wrap[1]
     var suffix = wrap[2]
     var node = document.createElement('div')
-    // 文本修订比如传入的是 <td></td> 则需要在其外层添加 tr 、tbody、table 后才能直接添加到文档碎片中。
+    // 文本内容修订比如传入的是 <td></td> 则需要在其外层添加 tr 、tbody、table 后才能直接添加到文档碎片中。
     node.innerHTML = prefix + templateString + suffix
     while (depth--) {
       node = node.lastChild
