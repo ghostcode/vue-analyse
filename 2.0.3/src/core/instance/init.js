@@ -40,7 +40,14 @@ export function initMixin (Vue: Class<Component>) {
     initLifecycle(vm)
     initEvents(vm)
     callHook(vm, 'beforeCreate')
+    // 包括如下操作：
+    // initProps(vm)
+    // initData(vm)
+    // initComputed(vm)
+    // initMethods(vm)
+    // initWatch(vm)
     initState(vm)
+    // reactivity 完毕
     callHook(vm, 'created')
     initRender(vm)
   }

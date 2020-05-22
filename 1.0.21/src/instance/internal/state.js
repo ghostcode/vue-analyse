@@ -96,6 +96,7 @@ export default function (Vue) {
     var keys = Object.keys(data)
     var i, key
     i = keys.length
+    
     while (i--) {
       key = keys[i]
       // there are two scenarios where we can proxy a data key:
@@ -115,7 +116,7 @@ export default function (Vue) {
         )
       }
     }
-    // observe data
+    //  observe data
     //  从这里开始对data属性下的值进行 getter/setter处理
     observe(data, this)
   }

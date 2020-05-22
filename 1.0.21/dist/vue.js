@@ -2645,6 +2645,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  //   Object.keys(obj).forEach(key=>{
 	  //       this.convert(key,obj[key])
 	  //   })
+	  // 遍历每个属性
 	  for (var i = 0, l = keys.length; i < l; i++) {
 	    this.convert(keys[i], obj[keys[i]]);
 	  }
@@ -3222,6 +3223,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (this.lazy) {
 	    this.dirty = true;
 	  } else if (this.sync || !_config2['default'].async) {
+	    // Vue.config.async = ?
+	    // 同步更新
 	    this.run();
 	  } else {
 	    // if queued, only overwrite shallow with non-shallow,
@@ -3233,6 +3236,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    if (("development") !== 'production' && _config2['default'].debug) {
 	      this.prevError = new Error('[vue] async stack trace');
 	    }
+	    // 最后还是会调用 watcher.run 方法
 	    _batcher.pushWatcher(this);
 	  }
 	};
@@ -3245,7 +3249,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Watcher.prototype.run = function () {
 	  if (this.active) {
-	    // 计算出新值
+	    // 计算出新值，重新触发收集。
 	    var value = this.get();
 	    // 对比新值和老值以及看现在值是否为对象
 	    if (value !== this.value ||
@@ -3265,6 +3269,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	      if (("development") !== 'production' && _config2['default'].debug && prevError) {
 	        this.prevError = null;
 	        try {
+	          // this.cb 就是 this._update
+	          // this._update = function (val, oldVal) {
+	          //   if (!dir._locked) {
+	          //     dir.update(val, oldVal)
+	          //   }
+	          // }
 	          this.cb.call(this.vm, value, oldValue);
 	        } catch (e) {
 	          _utilIndex.nextTick(function () {
@@ -4146,6 +4156,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var keys = Object.keys(data);
 	    var i, key;
 	    i = keys.length;
+	
 	    while (i--) {
 	      key = keys[i];
 	      // there are two scenarios where we can proxy a data key:
@@ -4159,7 +4170,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        _utilIndex.warn('Data field "' + key + '" is already defined ' + 'as a prop. To provide default value for a prop, use the "default" ' + 'prop option; if you want to pass prop values to an instantiation ' + 'call, use the "propsData" option.', this);
 	      }
 	    }
-	    // observe data
+	    //  observe data
 	    //  从这里开始对data属性下的值进行 getter/setter处理
 	    _observerIndex.observe(data, this);
 	  };

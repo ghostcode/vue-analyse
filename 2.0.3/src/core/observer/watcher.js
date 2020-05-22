@@ -82,6 +82,7 @@ export default class Watcher {
    * Evaluate the getter, and re-collect dependencies.
    */
   get () {
+    // 为了被收集到 Dep 的 subs 中
     pushTarget(this)
     const value = this.getter.call(this.vm, this.vm)
     // "touch" every property so they are all tracked as
@@ -103,6 +104,7 @@ export default class Watcher {
       this.newDepIds.add(id)
       this.newDeps.push(dep)
       if (!this.depIds.has(id)) {
+        // 把 watcher 实例放入 dep 的 subs 中，到此 watcher 里面有 dep ，dep 里面也有了 watcher 。
         dep.addSub(this)
       }
     }

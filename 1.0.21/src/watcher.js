@@ -33,7 +33,7 @@ let uid = 0
  * @constructor
  */
 
-export default function Watcher (vm, expOrFn, cb, options) {
+export default function Watcher(vm, expOrFn, cb, options) {
   // mix in options
   if (options) {
     extend(this, options)
@@ -235,6 +235,8 @@ Watcher.prototype.update = function (shallow) {
   if (this.lazy) {
     this.dirty = true
   } else if (this.sync || !config.async) {
+    // Vue.config.async = ?
+    // 同步更新
     this.run()
   } else {
     // if queued, only overwrite shallow with non-shallow,
@@ -250,6 +252,7 @@ Watcher.prototype.update = function (shallow) {
     if (process.env.NODE_ENV !== 'production' && config.debug) {
       this.prevError = new Error('[vue] async stack trace')
     }
+    // 最后还是会调用 watcher.run 方法
     pushWatcher(this)
   }
 }
@@ -262,7 +265,7 @@ Watcher.prototype.update = function (shallow) {
 
 Watcher.prototype.run = function () {
   if (this.active) {
-    // 计算出新值
+    // 计算出新值，重新触发收集。
     var value = this.get()
     // 对比新值和老值以及看现在值是否为对象
     if (
@@ -282,9 +285,15 @@ Watcher.prototype.run = function () {
       var prevError = this.prevError
       /* istanbul ignore if */
       if (process.env.NODE_ENV !== 'production' &&
-          config.debug && prevError) {
+        config.debug && prevError) {
         this.prevError = null
         try {
+          // this.cb 就是 this._update
+          // this._update = function (val, oldVal) {
+          //   if (!dir._locked) {
+          //     dir.update(val, oldVal)
+          //   }
+          // }
           this.cb.call(this.vm, value, oldValue)
         } catch (e) {
           nextTick(function () {
@@ -362,7 +371,7 @@ Watcher.prototype.teardown = function () {
  */
 
 const seenObjects = new Set()
-function traverse (val, seen) {
+function traverse(val, seen) {
   let i, keys, isA, isO
   if (!seen) {
     seen = seenObjects

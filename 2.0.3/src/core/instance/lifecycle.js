@@ -195,6 +195,7 @@ export function lifecycleMixin (Vue: Class<Component>) {
 export function callHook (vm: Component, hook: string) {
   const handlers = vm.$options[hook]
   if (handlers) {
+    // 兼顾这里 mixin 后会有多个同名生命周期函数
     for (let i = 0, j = handlers.length; i < j; i++) {
       handlers[i].call(vm)
     }

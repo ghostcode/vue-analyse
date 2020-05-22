@@ -33,8 +33,14 @@ export function initGlobalAPI (Vue: GlobalAPI) {
 
   util.extend(Vue.options.components, builtInComponents)
 
+  // 扩展全局方法
+
+  // 使用插件
   initUse(Vue)
+  // 属性合并
   initMixin(Vue)
+  // 继承
   initExtend(Vue)
+  // Vue.component / Vue.directive / Vue.filter 注册
   initAssetRegisters(Vue)
 }
