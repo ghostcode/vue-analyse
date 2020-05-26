@@ -7,10 +7,8 @@
 </head>
 <body>
   <div id="app">
-    <!-- Hello -->
-    <!-- <Hello>Vue！</Hello> -->
     {{message}}
-    <!-- userName: {{user.name.level}} -->
+    {{user.name}}
   </div>
   <script src="./dist/vue.js"></script>
   <script>
@@ -19,47 +17,15 @@
     let vm = new Vue({
       data:{
         message:'hi',
-        // name:'zhangsan',
-        // user:{
-        //   name:{
-        //     level:'v1'
-        //   }
-        // }
+        user:{
+        }
       }
     })
-
-    // Vue.component('hello',{
-    //   template:'<h1>Hello <slot></slot>!</h1>'
-    // })
 
     vm.message = 'xxx'
     vm.message = 'yyy'
 
-    // setTimeout(()=>{
-    //   vm.message = 'xxx'
-    // })
-
-    // setTimeout(()=>{
-    //   vm.message = 'yyy'
-    // })
-
     vm.$mount('#app')
-
-    const handler = {
-      get(obj,prop){
-        return prop in obj ? obj[prop] : 37
-      }
-    }
-
-    const p = new Proxy({},handler)
-
-    p.a = 1
-
-    console.log(p.a)
-
-    console.log(p.c)
-
-
   </script>
 </body>
 </html>
