@@ -1,5 +1,6 @@
 /* @flow */
 
+// 虚拟 DOM ，需要经过 create / diff / patch 过程
 export default class VNode {
   tag: string | void;
   data: VNodeData | void;

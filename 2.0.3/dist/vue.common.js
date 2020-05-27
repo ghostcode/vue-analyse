@@ -1715,6 +1715,8 @@ function lifecycleMixin (Vue) {
     if (!prevVnode) {
       // Vue.prototype.__patch__ is injected in entry points
       // based on the rendering backend used.
+      // path 只有在浏览器端才需要把 VDOM 转为 DOM，服务端则不需要，所以此时的 patch 是空函数
+      // Vue.prototype.__patch__ = config._isServer ? noop : patch
       vm.$el = vm.__patch__(vm.$el, vnode, hydrating);
     } else {
       vm.$el = vm.__patch__(prevVnode, vnode);

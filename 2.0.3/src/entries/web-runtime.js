@@ -26,6 +26,7 @@ extend(Vue.options.directives, platformDirectives)
 extend(Vue.options.components, platformComponents)
 
 // install platform patch function
+// 根据环境不同 patch 方法也不同
 Vue.prototype.__patch__ = config._isServer ? noop : patch
 
 // wrap mount
