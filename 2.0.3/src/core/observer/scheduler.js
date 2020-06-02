@@ -80,6 +80,7 @@ function flushSchedulerQueue () {
  * Push a watcher into the watcher queue.
  * Jobs with duplicate IDs will be skipped unless it's
  * pushed when the queue is being flushed.
+ * 把 watcher 压入队列，当队列在被处理时，相同 ID 的将被忽略。
  */
 export function queueWatcher (watcher: Watcher) {
   const id = watcher.id
@@ -97,6 +98,7 @@ export function queueWatcher (watcher: Watcher) {
       queue.splice(Math.max(i, index) + 1, 0, watcher)
     }
     // queue the flush
+    // 提高性能，下一个
     if (!waiting) {
       waiting = true
       nextTick(flushSchedulerQueue)

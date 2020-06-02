@@ -43,6 +43,7 @@ export default class VNode {
     this.child = undefined
     this.parent = undefined
     this.raw = false
+    // 是否为静态属性，方便后续 diff/patch 时的性能优化
     this.isStatic = false
     this.isRootInsert = true
     this.isComment = false

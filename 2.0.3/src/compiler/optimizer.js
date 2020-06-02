@@ -17,14 +17,19 @@ const genStaticKeysCached = cached(genStaticKeys)
  * 1. Hoist them into constants, so that we no longer need to
  *    create fresh nodes for them on each re-render;
  * 2. Completely skip them in the patching process.
+ * 标记静态子树，提高效率
+ * 1.不需要重复生成静态节点
+ * 2.在后续 path 算法时直接过掉
  */
 export function optimize (root: ?ASTElement, options: CompilerOptions) {
   if (!root) return
   isStaticKey = genStaticKeysCached(options.staticKeys || '')
   isPlatformReservedTag = options.isReservedTag || (() => false)
   // first pass: mark all non-static nodes.
+  // 第一遍遍历
   markStatic(root)
   // second pass: mark static roots.
+  // 第二遍遍历，标记静态跟节点
   markStaticRoots(root, false)
 }
 
@@ -64,9 +69,11 @@ function markStaticRoots (node: ASTNode, isInFor: boolean) {
 }
 
 function isStatic (node: ASTNode): boolean {
+  // 表达式节点
   if (node.type === 2) { // expression
     return false
   }
+  // 文本节点
   if (node.type === 3) { // text
     return true
   }
