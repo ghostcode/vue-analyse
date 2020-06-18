@@ -113,11 +113,8 @@ function linkAndCapture (linker, vm) {
   // 指令排序
   dirs.sort(directiveComparator)
   for (var i = 0, l = dirs.length; i < l; i++) {
-<<<<<<< .merge_file_3Zu9T7
     // 触发创建 watcher 实例的地方
-=======
     // 实例化 Watcher 同时把指令的上更新方法 update 作为参数传入
->>>>>>> .merge_file_F3GLHF
     dirs[i]._bind()
   }
   return dirs

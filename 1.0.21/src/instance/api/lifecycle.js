@@ -25,12 +25,9 @@ export default function (Vue) {
     if (!el) {
       el = document.createElement('div')
     }
-<<<<<<< HEAD
     // 这里开始编译模板
-=======
     // Transclude, compile and link element.
     // 内嵌、编译和链接元素
->>>>>>> 1590fb4f1741881c44727698148bc20690c810e4
     this._compile(el)
     this._initDOMHooks()
     if (inDoc(this.$el)) {
