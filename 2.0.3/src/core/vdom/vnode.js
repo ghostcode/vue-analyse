@@ -1,5 +1,6 @@
 /* @flow */
 
+// 虚拟 DOM ，需要经过 create / diff / patch 过程
 export default class VNode {
   tag: string | void;
   data: VNodeData | void;
@@ -42,6 +43,7 @@ export default class VNode {
     this.child = undefined
     this.parent = undefined
     this.raw = false
+    // 是否为静态属性，方便后续 diff/patch 时的性能优化
     this.isStatic = false
     this.isRootInsert = true
     this.isComment = false

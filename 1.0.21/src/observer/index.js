@@ -73,6 +73,7 @@ Observer.prototype.walk = function (obj) {
   //   Object.keys(obj).forEach(key=>{
   //       this.convert(key,obj[key])
   //   })
+  // 遍历每个属性
   for (var i = 0, l = keys.length; i < l; i++) {
     this.convert(keys[i], obj[keys[i]])
   }

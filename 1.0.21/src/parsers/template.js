@@ -89,6 +89,7 @@ const entityRE = /&#?\w+?;/
 
 function stringToFragment (templateString, raw) {
   // try a cache hit first
+  // 被缓存的唯一值
   var cacheKey = raw
     ? templateString
     : templateString.trim()
@@ -103,6 +104,7 @@ function stringToFragment (templateString, raw) {
 
   if (!tagMatch && !entityMatch) {
     // text only, return a single text node.
+    // 纯文本模式
     frag.appendChild(
       document.createTextNode(templateString)
     )
@@ -113,7 +115,7 @@ function stringToFragment (templateString, raw) {
     var prefix = wrap[1]
     var suffix = wrap[2]
     var node = document.createElement('div')
-
+    // 文本内容修订比如传入的是 <td></td> 则需要在其外层添加 tr 、tbody、table 后才能直接添加到文档碎片中。
     node.innerHTML = prefix + templateString + suffix
     while (depth--) {
       node = node.lastChild
@@ -123,12 +125,14 @@ function stringToFragment (templateString, raw) {
     /* eslint-disable no-cond-assign */
     while (child = node.firstChild) {
     /* eslint-enable no-cond-assign */
+      // appenChild 后 child 则从原来位置处被删除，则这里可以使用 while 一直取 firstChild 始终得到最新的第一个元素
       frag.appendChild(child)
     }
   }
   if (!raw) {
     trimNode(frag)
   }
+  // 存入缓存，提高性能
   templateCache.put(cacheKey, frag)
   return frag
 }
@@ -158,6 +162,9 @@ function nodeToFragment (node) {
   /* eslint-disable no-cond-assign */
   while (child = clonedNode.firstChild) {
   /* eslint-enable no-cond-assign */
+    // 每次 appenChild 之后，当前 child 就会被从原来的地方删除掉
+    // 所以可以一直 while 取出 firstChild
+    // cloneNode 就会处理成 fragment
     frag.appendChild(child)
   }
   trimNode(frag)

@@ -34,9 +34,15 @@ export function compile (
   options = options
     ? extend(extend({}, baseOptions), options)
     : baseOptions
+  // return {
+  //   ast,
+  //   render: code.render,
+  //   staticRenderFns: code.staticRenderFns
+  // }
   return baseCompile(template, options)
 }
 
+// template 编译为 render 函数等
 export function compileToFunctions (
   template: string,
   options?: CompilerOptions,
@@ -63,11 +69,13 @@ export function compileToFunctions (
   const key = options && options.delimiters
     ? String(options.delimiters) + template
     : template
+  // 先读缓存
   if (cache[key]) {
     return cache[key]
   }
   const res = {}
   const compiled = compile(template, options)
+  // 通过 new Function 的方式生成 render 函数并缓存
   res.render = makeFunction(compiled.render)
   const l = compiled.staticRenderFns.length
   res.staticRenderFns = new Array(l)
@@ -84,6 +92,7 @@ export function compileToFunctions (
       )
     }
   }
+  // 缓存数据同时返回
   return (cache[key] = res)
 }
 

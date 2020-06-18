@@ -26,6 +26,7 @@ export function initAssetRegisters (Vue: GlobalAPI) {
         }
         if (type === 'component' && isPlainObject(definition)) {
           definition.name = definition.name || id
+          // Vue.component 就是调用 Vue.extend 方法
           definition = Vue.extend(definition)
         }
         if (type === 'directive' && typeof definition === 'function') {

@@ -9,26 +9,25 @@
 
 <body>
   <div id="app">
-    <keep-alive>
-      <hello></hello>
-    </keep-alive>
+    {{message}}
+    <!-- <hello></hello> -->
   </div>
   <script src="./dist/vue.js"></script>
   <script>
-    Vue.component('hello', {
-      data: function () {
-        return {
-          message: 'hi',
-        }
-      },
-      template: '<strong>{{message}}</strong>'
-    })
+    // Vue.component('hello', {
+    //   data: function () {
+    //     return {
+    //       message: 'hi',
+    //     }
+    //   },
+    //   template: '<strong>{{message}}</strong>'
+    // })
 
     let vm = new Vue({
       el: '#app',
-      // data:{
-      //   message:'hi',
-      // }
+      data:{
+        message:'hi',
+      }
     })
   </script>
 </body>

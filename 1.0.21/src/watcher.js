@@ -33,7 +33,7 @@ let uid = 0
  * @constructor
  */
 
-export default function Watcher (vm, expOrFn, cb, options) {
+export default function Watcher(vm, expOrFn, cb, options) {
   // mix in options
   if (options) {
     extend(this, options)
@@ -61,7 +61,8 @@ export default function Watcher (vm, expOrFn, cb, options) {
     this.getter = res.get
     this.setter = res.set
   }
-  // 执行的入口
+  // 执行的入口，调用 get 方法触发收集动作，然后添加 Watcher 实例到 dep.subs 中，
+  // 同时返回计算（调用 this.getter.call() 方法）的值
   this.value = this.lazy
     ? undefined
     : this.get()
@@ -90,7 +91,7 @@ Watcher.prototype.get = function () {
     //
     //       }
     //   })
-    // 这里是重点！！！
+    //   这里是重点！！！
     value = this.getter.call(scope, scope)
   } catch (e) {
     if (
@@ -175,7 +176,7 @@ Watcher.prototype.set = function (value) {
 
 /**
  * Prepare for dependency collection.
- * Dep.target就是Watcher实例
+ * Dep.target 就是 Watcher实例
  */
 
 Watcher.prototype.beforeGet = function () {
@@ -234,6 +235,8 @@ Watcher.prototype.update = function (shallow) {
   if (this.lazy) {
     this.dirty = true
   } else if (this.sync || !config.async) {
+    // Vue.config.async = ?
+    // 同步更新
     this.run()
   } else {
     // if queued, only overwrite shallow with non-shallow,
@@ -249,6 +252,7 @@ Watcher.prototype.update = function (shallow) {
     if (process.env.NODE_ENV !== 'production' && config.debug) {
       this.prevError = new Error('[vue] async stack trace')
     }
+    // 最后还是会调用 watcher.run 方法
     pushWatcher(this)
   }
 }
@@ -261,7 +265,9 @@ Watcher.prototype.update = function (shallow) {
 
 Watcher.prototype.run = function () {
   if (this.active) {
+    // 计算出新值，重新触发收集。
     var value = this.get()
+    // 对比新值和老值以及看现在值是否为对象
     if (
       value !== this.value ||
       // Deep watchers and watchers on Object/Arrays should fire even
@@ -279,9 +285,15 @@ Watcher.prototype.run = function () {
       var prevError = this.prevError
       /* istanbul ignore if */
       if (process.env.NODE_ENV !== 'production' &&
-          config.debug && prevError) {
+        config.debug && prevError) {
         this.prevError = null
         try {
+          // this.cb 就是 this._update
+          // this._update = function (val, oldVal) {
+          //   if (!dir._locked) {
+          //     dir.update(val, oldVal)
+          //   }
+          // }
           this.cb.call(this.vm, value, oldValue)
         } catch (e) {
           nextTick(function () {
@@ -290,6 +302,12 @@ Watcher.prototype.run = function () {
           throw e
         }
       } else {
+        // this.cb 就是 this._update
+        // this._update = function (val, oldVal) {
+        //   if (!dir._locked) {
+        //     dir.update(val, oldVal)
+        //   }
+        // }
         this.cb.call(this.vm, value, oldValue)
       }
     }
@@ -353,7 +371,7 @@ Watcher.prototype.teardown = function () {
  */
 
 const seenObjects = new Set()
-function traverse (val, seen) {
+function traverse(val, seen) {
   let i, keys, isA, isO
   if (!seen) {
     seen = seenObjects

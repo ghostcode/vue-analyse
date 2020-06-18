@@ -53,6 +53,7 @@ export function renderMixin (Vue: Class<Component>) {
     // render self
     let vnode
     try {
+      // 调用 render 返回虚拟 DOM
       vnode = render.call(vm._renderProxy, vm.$createElement)
     } catch (e) {
       if (process.env.NODE_ENV !== 'production') {

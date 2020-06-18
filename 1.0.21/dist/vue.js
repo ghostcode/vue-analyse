@@ -289,7 +289,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this._callHook('init');
 	
 	    // initialize data observation and scope inheritance.
-	    //  初始化数据观察和作用于继承
+	    // 数据监测以及代理数据到实例
 	    this._initState();
 	
 	    // setup event system and option events.
@@ -1601,6 +1601,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (!tagRE.test(text)) {
 	    return null;
 	  }
+	  // 处理插值文本节点（ {{world}} ）
 	  var tokens = [];
 	  var lastIndex = tagRE.lastIndex = 0;
 	  var match, index, html, value, first, oneTime;
@@ -1618,6 +1619,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    html = htmlRE.test(match[0]);
 	    value = html ? match[1] : match[2];
 	    first = value.charCodeAt(0);
+	    // 为何要判断 * ？
 	    oneTime = first === 42; // *
 	    value = oneTime ? value.slice(1) : value;
 	    tokens.push({
@@ -2643,6 +2645,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  //   Object.keys(obj).forEach(key=>{
 	  //       this.convert(key,obj[key])
 	  //   })
+	  // 遍历每个属性
 	  for (var i = 0, l = keys.length; i < l; i++) {
 	    this.convert(keys[i], obj[keys[i]]);
 	  }
@@ -2853,8 +2856,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	 * A dep is an observable that can have multiple
 	 * directives subscribing to it.
-	 *
-	 * 一个观察者模式
+	 * 观察者收集器
 	 * @constructor
 	 */
 	
@@ -2868,7 +2870,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	// this is globally unique because there could be only one
 	// watcher being evaluated at any time.
 	
-	// 当前正被处理的Watcher，全局唯一，且同一时间只有一个Watcher被计算。
+	// 当前正被处理的 Watcher ，全局唯一，且同一时间只有一个 Watcher 被计算。
 	Dep.target = null;
 	
 	/**
@@ -3070,7 +3072,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.getter = res.get;
 	    this.setter = res.set;
 	  }
-	  // 执行的入口
+	  // 执行的入口，调用 get 方法触发收集动作，然后添加 Watcher 实例到 dep.subs 中，
+	  // 同时返回计算（调用 this.getter.call() 方法）的值
 	  this.value = this.lazy ? undefined : this.get();
 	  // state for avoiding false triggers for deep and Array
 	  // watchers during vm._digest()
@@ -3097,7 +3100,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    //
 	    //       }
 	    //   })
-	    // 这里是重点！！！
+	    //   这里是重点！！！
 	    value = this.getter.call(scope, scope);
 	  } catch (e) {
 	    if (("development") !== 'production' && _config2['default'].warnExpressionErrors) {
@@ -3161,7 +3164,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	/**
 	 * Prepare for dependency collection.
-	 * Dep.target就是Watcher实例
+	 * Dep.target 就是 Watcher实例
 	 */
 	
 	Watcher.prototype.beforeGet = function () {
@@ -3220,6 +3223,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (this.lazy) {
 	    this.dirty = true;
 	  } else if (this.sync || !_config2['default'].async) {
+	    // Vue.config.async = ?
+	    // 同步更新
 	    this.run();
 	  } else {
 	    // if queued, only overwrite shallow with non-shallow,
@@ -3231,6 +3236,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    if (("development") !== 'production' && _config2['default'].debug) {
 	      this.prevError = new Error('[vue] async stack trace');
 	    }
+	    // 最后还是会调用 watcher.run 方法
 	    _batcher.pushWatcher(this);
 	  }
 	};
@@ -3243,7 +3249,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Watcher.prototype.run = function () {
 	  if (this.active) {
+	    // 计算出新值，重新触发收集。
 	    var value = this.get();
+	    // 对比新值和老值以及看现在值是否为对象
 	    if (value !== this.value ||
 	    // Deep watchers and watchers on Object/Arrays should fire even
 	    // when the value is the same, because the value may
@@ -3261,6 +3269,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	      if (("development") !== 'production' && _config2['default'].debug && prevError) {
 	        this.prevError = null;
 	        try {
+	          // this.cb 就是 this._update
+	          // this._update = function (val, oldVal) {
+	          //   if (!dir._locked) {
+	          //     dir.update(val, oldVal)
+	          //   }
+	          // }
 	          this.cb.call(this.vm, value, oldValue);
 	        } catch (e) {
 	          _utilIndex.nextTick(function () {
@@ -3269,6 +3283,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	          throw e;
 	        }
 	      } else {
+	        // this.cb 就是 this._update
+	        // this._update = function (val, oldVal) {
+	        //   if (!dir._locked) {
+	        //     dir.update(val, oldVal)
+	        //   }
+	        // }
 	        this.cb.call(this.vm, value, oldValue);
 	      }
 	    }
@@ -4136,6 +4156,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var keys = Object.keys(data);
 	    var i, key;
 	    i = keys.length;
+	
 	    while (i--) {
 	      key = keys[i];
 	      // there are two scenarios where we can proxy a data key:
@@ -4149,7 +4170,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        _utilIndex.warn('Data field "' + key + '" is already defined ' + 'as a prop. To provide default value for a prop, use the "default" ' + 'prop option; if you want to pass prop values to an instantiation ' + 'call, use the "propsData" option.', this);
 	      }
 	    }
-	    // observe data
+	    //  observe data
 	    //  从这里开始对data属性下的值进行 getter/setter处理
 	    _observerIndex.observe(data, this);
 	  };
@@ -4459,8 +4480,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var originalDirCount = vm._directives.length;
 	  linker();
 	  var dirs = vm._directives.slice(originalDirCount);
+	  // 指令排序
 	  dirs.sort(directiveComparator);
 	  for (var i = 0, l = dirs.length; i < l; i++) {
+	    // 实例化 Watcher 同时把指令的上更新方法 update 作为参数传入
 	    dirs[i]._bind();
 	  }
 	  return dirs;
@@ -4468,7 +4491,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	/**
 	 * Directive priority sort comparator
-	 *
+	 * 指令优先级排序
 	 * @param {Object} a
 	 * @param {Object} b
 	 */
@@ -4564,6 +4587,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  // only need to compile other attributes for
 	  // non-fragment instances
+	  // 不是有 isFragment 这个方法吗 ？
 	  if (el.nodeType !== 11) {
 	    // for components, container and replacer need to be
 	    // compiled separately and linked in different scopes.
@@ -4697,7 +4721,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (node._skip) {
 	    return removeText;
 	  }
-	
+	  // tokens.push({
+	  //   tag: true,
+	  //   value: value.trim(),
+	  //   html: html,
+	  //   oneTime: oneTime
+	  // })
+	  // tokens.push({
+	  //   value: value.trim(),
+	  // })
 	  var tokens = _parsersText.parseText(node.wholeText);
 	  if (!tokens) {
 	    return null;
@@ -4713,15 +4745,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	    next._skip = true;
 	    next = next.nextSibling;
 	  }
-	  // 创建 document fragment
+	  // 根据 tokens, 创建 document fragment
 	  var frag = document.createDocumentFragment();
 	  var el, token;
 	  for (var i = 0, l = tokens.length; i < l; i++) {
+	    // token 这里是对象，利用引用类型的性质在 processTextToken 中进行修改则直接改动了 tokens 数组里面的数值。
 	    token = tokens[i];
 	    // 查看是否为标签
 	    el = token.tag ? processTextToken(token, options) : document.createTextNode(token.value);
 	    frag.appendChild(el);
 	  }
+	  // 这里的 tokens 已经是扩展后
+	  // token.descriptor = {
+	  //   name: type,
+	  //   // 映射指令系统
+	  //   def: publicDirectives[type], // 这里就是指令的具体方法
+	  //   expression: parsed.expression,
+	  //   filters: parsed.filters
+	  // }
 	  return makeTextNodeLinkFn(tokens, frag, options);
 	}
 	
@@ -4738,7 +4779,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	/**
 	 * Process a single text token.
-	 *
+	 * 创建 DOM 节点和扩展 token 对象，添加一个 descriptor 属性
 	 * @param {Object} token
 	 * @param {Object} options
 	 * @return {Node}
@@ -4765,6 +4806,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var parsed = _parsersDirective.parseDirective(token.value);
 	    token.descriptor = {
 	      name: type,
+	      // 映射指令系统
 	      def: _directivesPublicIndex2['default'][type],
 	      expression: parsed.expression,
 	      filters: parsed.filters
@@ -5042,6 +5084,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      } else
 	
 	        // event handlers
+	        // const onRE = /^v-on:|^@/
 	        if (onRE.test(name)) {
 	          arg = name.replace(onRE, '');
 	          pushDir('on', _directivesPublicIndex2['default'].on);
@@ -5377,6 +5420,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function stringToFragment(templateString, raw) {
 	  // try a cache hit first
+	  // 被缓存的唯一值
 	  var cacheKey = raw ? templateString : templateString.trim();
 	  var hit = templateCache.get(cacheKey);
 	  if (hit) {
@@ -5389,6 +5433,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  if (!tagMatch && !entityMatch) {
 	    // text only, return a single text node.
+	    // 纯文本模式
 	    frag.appendChild(document.createTextNode(templateString));
 	  } else {
 	    var tag = tagMatch && tagMatch[1];
@@ -5397,7 +5442,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var prefix = wrap[1];
 	    var suffix = wrap[2];
 	    var node = document.createElement('div');
-	
+	    // 文本内容修订比如传入的是 <td></td> 则需要在其外层添加 tr 、tbody、table 后才能直接添加到文档碎片中。
 	    node.innerHTML = prefix + templateString + suffix;
 	    while (depth--) {
 	      node = node.lastChild;
@@ -5407,12 +5452,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	    /* eslint-disable no-cond-assign */
 	    while (child = node.firstChild) {
 	      /* eslint-enable no-cond-assign */
+	      // appenChild 后 child 则从原来位置处被删除，则这里可以使用 while 一直取 firstChild 始终得到最新的第一个元素
 	      frag.appendChild(child);
 	    }
 	  }
 	  if (!raw) {
 	    _utilIndex.trimNode(frag);
 	  }
+	  // 存入缓存，提高性能
 	  templateCache.put(cacheKey, frag);
 	  return frag;
 	}
@@ -5442,6 +5489,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  /* eslint-disable no-cond-assign */
 	  while (child = clonedNode.firstChild) {
 	    /* eslint-enable no-cond-assign */
+	    // 每次 appenChild 之后，当前 child 就会被从原来的地方删除掉
+	    // 所以可以一直 while 取出 firstChild
+	    // cloneNode 就会处理成 fragment
 	    frag.appendChild(child);
 	  }
 	  _utilIndex.trimNode(frag);
@@ -9108,6 +9158,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  // assuming the same object will be used for compile
 	  // right after this.
 	  if (options) {
+	    // 取出容器上的所有属性
 	    options._containerAttrs = extractAttrs(el);
 	  }
 	  // for template tags, what we want is its content as
@@ -9150,7 +9201,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var replacer = frag.firstChild;
 	    var tag = replacer.tagName && replacer.tagName.toLowerCase();
 	    if (options.replace) {
+	      // 替换根结点
 	      /* istanbul ignore if */
+	      // 挂载节点为 body 则提醒
 	      if (el === document.body) {
 	        ("development") !== 'production' && _utilIndex.warn('You are mounting an instance with a template to ' + '<body>. This will replace <body> entirely. You ' + 'should probably use `replace: false` here.');
 	      }
@@ -9173,10 +9226,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return frag;
 	      } else {
 	        options._replacerAttrs = extractAttrs(replacer);
+	        // 根元素和替换元素属性值合并
 	        mergeAttrs(el, replacer);
 	        return replacer;
 	      }
 	    } else {
+	      // 若不是替换根结点则直接添加 frag 到挂载节点里
 	      el.appendChild(frag);
 	      return el;
 	    }
@@ -9459,7 +9514,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  /**
 	   * Trigger all handlers for a hook
-	   *
+	   * 
 	   * @param {String} hook
 	   */
 	
@@ -9518,13 +9573,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  /**
 	   * Transclude, compile and link element.
-	   *
+	   * 内嵌(template 编译为 DOM 然后嵌入或者替换 el 元素)、编译和链接元素
 	   * If a pre-compiled linker is available, that means the
 	   * passed in element will be pre-transcluded and compiled
 	   * as well - all we need to do is to call the linker.
 	   *
 	   * Otherwise we need to call transclude/compile/link here.
-	   *
+	   * 编译过程主要是对元素的属性进行提取，然后生成对应的指令实例，接着执行编译生成的 linker 函数，也就是对所有
+	   * 生成的指令执行 bind ，并对其添加响应式处理。
 	   * @param {Element} el
 	   */
 	
@@ -9537,10 +9593,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    // the template and caches the original attributes
 	    // on the container node and replacer node.
 	    var original = el;
+	    // 把 template 编译成 DOM
 	    el = _compilerIndex.transclude(el, options);
 	    this._initElement(el);
 	
 	    // handle v-pre on root node (#2026)
+	    // 若是 v-pre 指令就什么也不用做
 	    if (el.nodeType === 1 && _utilIndex.getAttr(el, 'v-pre') !== null) {
 	      return;
 	    }
@@ -9561,7 +9619,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    if (options._linkerCachable) {
 	      contentLinkFn = ctor.linker;
 	      if (!contentLinkFn) {
-	        // 指令解析
+	        // 遍历模板解析出模板里的指令
+	        // 将指令解析成为指令描述对象 (descriptor)，闭包在了 link 函数里，
+	        // link 函数会把 descriptor 传入 Directive 构造函数，创建出真正的指令实例
 	        contentLinkFn = ctor.linker = _compilerIndex.compile(el, options);
 	      }
 	    }
@@ -9581,6 +9641,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    };
 	
 	    // finally replace original
+	    // 输出到 DOM Tree 中
 	    if (options.replace) {
 	      _utilIndex.replace(original, el);
 	    }
@@ -9839,7 +9900,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	
 	  // copy def properties
-	  // 代理 update 方法到指令上
+	  // 扩展 def（bind、update） 到指令上面，其实就是指令里面的方法
 	  var def = descriptor.def;
 	  if (typeof def === 'function') {
 	    this.update = def;
@@ -9890,6 +9951,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    if (this.afterBind) {
 	      this.afterBind();
 	    } else if (this.update) {
+	      // 调用指令上的更新方法
 	      this.update(watcher.value);
 	    }
 	  }
@@ -10796,6 +10858,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * process. The passed in `el` can be a selector string, an
 	   * existing Element, or a DocumentFragment (for block
 	   * instances).
+	   * 主要处理传入的 el 参数，它可以是选择器字符串、一个元素或者是 DocumentFragment。
 	   *
 	   * @param {Element|DocumentFragment|string} el
 	   * @public
@@ -10810,6 +10873,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    if (!el) {
 	      el = document.createElement('div');
 	    }
+	    // Transclude, compile and link element.
+	    // 内嵌、编译和链接元素
 	    this._compile(el);
 	    this._initDOMHooks();
 	    if (_utilIndex.inDoc(this.$el)) {

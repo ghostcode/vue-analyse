@@ -7,17 +7,25 @@
 </head>
 <body>
   <div id="app">
-    Hello {{message + name}}
+    {{message}}
+    {{user.name}}
   </div>
   <script src="./dist/vue.js"></script>
   <script>
+    // Vue.config.async = false
+
     let vm = new Vue({
-      el:'#app',
       data:{
         message:'hi',
-        name:'zhangsan',
+        user:{
+        }
       }
     })
+
+    vm.message = 'xxx'
+    vm.message = 'yyy'
+
+    vm.$mount('#app')
   </script>
 </body>
 </html>

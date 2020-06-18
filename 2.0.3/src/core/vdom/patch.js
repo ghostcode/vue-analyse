@@ -50,6 +50,7 @@ function createKeyToOldIdx (children, beginIdx, endIdx) {
 }
 
 export function createPatchFunction (backend) {
+  console.log(backend,"<<<<<<<<<<<<")
   let i, j
   const cbs = {}
 
@@ -80,7 +81,7 @@ export function createPatchFunction (backend) {
     const parent = nodeOps.parentNode(el)
     nodeOps.removeChild(parent, el)
   }
-
+  // 通过虚拟节点创建真实的 DOM 并插入到它的父节点中
   function createElm (vnode, insertedVnodeQueue, nested) {
     let i
     const data = vnode.data
@@ -325,7 +326,27 @@ export function createPatchFunction (backend) {
       removeVnodes(parentElm, oldCh, oldStartIdx, oldEndIdx)
     }
   }
+  // 更新节点
+  // 1.如果VNode和oldVNode均为静态节点
 
+  // 我们说了，静态节点无论数据发生任何变化都与它无关，所以都为静态节点的话则直接跳过，无需处理。
+
+  // 2.如果VNode是文本节点
+
+  // 如果VNode是文本节点即表示这个节点内只包含纯文本，那么只需看oldVNode是否也是文本节点，如果是，那就比较两个文本是否不同，如果不同则把oldVNode里的文本改成跟VNode的文本一样。如果oldVNode不是文本节点，那么不论它是什么，直接调用setTextNode方法把它改成文本节点，并且文本内容跟VNode相同。
+
+  // 3.如果VNode是元素节点
+
+  // 如果VNode是元素节点，则又细分以下两种情况：
+
+  // 该节点包含子节点
+
+  // 如果新的节点内包含了子节点，那么此时要看旧的节点是否包含子节点，如果旧的节点里也包含了子节点，那就需要递归对比更新子节点；如果旧的节点里不包含子节点，那么这个旧节点有可能是空节点或者是文本节点，如果旧的节点是空节点就把新的节点里的子节点创建一份然后插入到旧的节点里面，如果旧的节点是文本节点，则把文本清空，然后把新的节点里的子节点创建一份然后插入到旧的节点里面。
+
+  // 该节点不包含子节点
+
+  // 如果该节点不包含子节点，同时它又不是文本节点，那就说明该节点是个空节点，那就好办了，不管旧节点之前里面都有啥，直接清空即可。
+  // https://vue-js.com/learn-vue/virtualDOM/patch.html#_5-%E6%9B%B4%E6%96%B0%E8%8A%82%E7%82%B9
   function patchVnode (oldVnode, vnode, insertedVnodeQueue, removeOnly) {
     if (oldVnode === vnode) {
       return
@@ -334,6 +355,7 @@ export function createPatchFunction (backend) {
     // note we only do this if the vnode is cloned -
     // if the new node is not cloned it means the render functions have been
     // reset by the hot-reload-api and we need to do a proper re-render.
+    // 静态节点
     if (vnode.isStatic &&
         oldVnode.isStatic &&
         vnode.key === oldVnode.key &&
@@ -355,17 +377,30 @@ export function createPatchFunction (backend) {
       if (isDef(i = data.hook) && isDef(i = i.update)) i(oldVnode, vnode)
     }
     if (isUndef(vnode.text)) {
+      // 同时存在子节点
       if (isDef(oldCh) && isDef(ch)) {
+        // 若都存在，判断子节点是否相同，不同则更新子节点
         if (oldCh !== ch) updateChildren(elm, oldCh, ch, insertedVnodeQueue, removeOnly)
       } else if (isDef(ch)) {
+        /**
+         * 判断oldVnode是否有文本？
+         * 若没有，则把vnode的子节点添加到真实DOM中
+         * 若有，则清空Dom中的文本，再把vnode的子节点添加到真实DOM中
+         */
         if (isDef(oldVnode.text)) nodeOps.setTextContent(elm, '')
         addVnodes(elm, null, ch, 0, ch.length - 1, insertedVnodeQueue)
+      // 若只有oldnode的子节点存在
       } else if (isDef(oldCh)) {
+        // 清空DOM中的子节点
         removeVnodes(elm, oldCh, 0, oldCh.length - 1)
+      // 若vnode和oldnode都没有子节点，但是oldnode中有文本
       } else if (isDef(oldVnode.text)) {
+        // 清空oldnode文本
         nodeOps.setTextContent(elm, '')
       }
+    // 若有，vnode的text属性与oldVnode的text属性是否相同？
     } else if (oldVnode.text !== vnode.text) {
+      // 若不相同：则用vnode的text替换真实DOM的文本
       nodeOps.setTextContent(elm, vnode.text)
     }
     if (hasData) {
@@ -449,7 +484,8 @@ export function createPatchFunction (backend) {
       return _toString(vnode.text) === node.data
     }
   }
-
+  // 上面都是一些辅助函数，同时把差异化参数固化不要每次调用 patch 的时候都要传递 nodeOps 和 modules 避免多次计算。
+  // 返回的 patch 方法
   return function patch (oldVnode, vnode, hydrating, removeOnly) {
     if (!vnode) {
       if (oldVnode) invokeDestroyHook(oldVnode)

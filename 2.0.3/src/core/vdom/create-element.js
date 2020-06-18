@@ -39,9 +39,12 @@ function _createElement (
     // in case of component :is set to falsy value
     return emptyVNode()
   }
+
+
   if (typeof tag === 'string') {
     let Ctor
     const ns = config.getTagNamespace(tag)
+    // 根据
     if (config.isReservedTag(tag)) {
       // platform built-in elements
       return new VNode(

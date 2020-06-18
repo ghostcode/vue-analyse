@@ -34,7 +34,8 @@ export function generate (
     staticRenderFns: currentStaticRenderFns
   }
 }
-
+// 可以看到在最后代码生成阶段，最重要的函数就是 genElement 这个函数，针对 AST 的属性(不同的指令、属性)，
+// 我们会选择不同的代码生成函数。最后我们按照 AST 生成拼接成一个字符串，
 function genElement (el: ASTElement): string {
   if (el.staticRoot && !el.staticProcessed) {
     // hoist static sub-trees out

@@ -10,5 +10,5 @@ export default {
 
   update (value) {
     this.el[this.attr] = _toString(value)
-  }
+  },
 }

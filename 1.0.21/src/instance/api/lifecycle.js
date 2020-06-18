@@ -7,6 +7,7 @@ export default function (Vue) {
    * process. The passed in `el` can be a selector string, an
    * existing Element, or a DocumentFragment (for block
    * instances).
+   * 主要处理传入的 el 参数，它可以是选择器字符串、一个元素或者是 DocumentFragment。
    *
    * @param {Element|DocumentFragment|string} el
    * @public
@@ -24,7 +25,12 @@ export default function (Vue) {
     if (!el) {
       el = document.createElement('div')
     }
+<<<<<<< HEAD
     // 这里开始编译模板
+=======
+    // Transclude, compile and link element.
+    // 内嵌、编译和链接元素
+>>>>>>> 1590fb4f1741881c44727698148bc20690c810e4
     this._compile(el)
     this._initDOMHooks()
     if (inDoc(this.$el)) {
@@ -53,7 +59,7 @@ export default function (Vue) {
    * @param {Boolean} remove
    * @param {Boolean} deferCleanup
    */
-  
+
   /**
    * 卸载、销毁 Vue 实例，简单的代理到内部方法
    */

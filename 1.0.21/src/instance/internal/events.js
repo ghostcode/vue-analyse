@@ -163,7 +163,7 @@ export default function (Vue) {
 
   /**
    * Trigger all handlers for a hook
-   *
+   * 
    * @param {String} hook
    */
 

@@ -110,9 +110,14 @@ function linkAndCapture (linker, vm) {
   var originalDirCount = vm._directives.length
   linker()
   var dirs = vm._directives.slice(originalDirCount)
+  // 指令排序
   dirs.sort(directiveComparator)
   for (var i = 0, l = dirs.length; i < l; i++) {
+<<<<<<< .merge_file_3Zu9T7
     // 触发创建 watcher 实例的地方
+=======
+    // 实例化 Watcher 同时把指令的上更新方法 update 作为参数传入
+>>>>>>> .merge_file_F3GLHF
     dirs[i]._bind()
   }
   return dirs
@@ -120,7 +125,7 @@ function linkAndCapture (linker, vm) {
 
 /**
  * Directive priority sort comparator
- *
+ * 指令优先级排序
  * @param {Object} a
  * @param {Object} b
  */
@@ -216,6 +221,7 @@ export function compileRoot (el, options, contextOptions) {
 
   // only need to compile other attributes for
   // non-fragment instances
+  // 不是有 isFragment 这个方法吗 ？
   if (el.nodeType !== 11) {
     // for components, container and replacer need to be
     // compiled separately and linked in different scopes.
@@ -291,7 +297,7 @@ export function compileRoot (el, options, contextOptions) {
 
 function compileNode (node, options) {
   var type = node.nodeType
-  
+
   if (type === 1 && node.tagName !== 'SCRIPT') {
     // 非 script 的普通标签
     return compileElement(node, options)
@@ -357,7 +363,15 @@ function compileTextNode (node, options) {
   if (node._skip) {
     return removeText
   }
-
+  // tokens.push({
+  //   tag: true,
+  //   value: value.trim(),
+  //   html: html,
+  //   oneTime: oneTime
+  // })
+  // tokens.push({
+  //   value: value.trim(),
+  // })
   var tokens = parseText(node.wholeText)
   if (!tokens) {
     return null
@@ -373,10 +387,11 @@ function compileTextNode (node, options) {
     next._skip = true
     next = next.nextSibling
   }
-  // 创建 document fragment
+  // 根据 tokens, 创建 document fragment
   var frag = document.createDocumentFragment()
   var el, token
   for (var i = 0, l = tokens.length; i < l; i++) {
+    // token 这里是对象，利用引用类型的性质在 processTextToken 中进行修改则直接改动了 tokens 数组里面的数值。
     token = tokens[i]
     // 查看是否为标签
     el = token.tag
@@ -384,6 +399,14 @@ function compileTextNode (node, options) {
       : document.createTextNode(token.value)
     frag.appendChild(el)
   }
+  // 这里的 tokens 已经是扩展后
+  // token.descriptor = {
+  //   name: type,
+  //   // 映射指令系统
+  //   def: publicDirectives[type], // 这里就是指令的具体方法
+  //   expression: parsed.expression,
+  //   filters: parsed.filters
+  // }
   return makeTextNodeLinkFn(tokens, frag, options)
 }
 
@@ -400,7 +423,7 @@ function removeText (vm, node) {
 
 /**
  * Process a single text token.
- *
+ * 创建 DOM 节点和扩展 token 对象，添加一个 descriptor 属性
  * @param {Object} token
  * @param {Object} options
  * @return {Node}
@@ -427,6 +450,7 @@ function processTextToken (token, options) {
     var parsed = parseDirective(token.value)
     token.descriptor = {
       name: type,
+      // 映射指令系统
       def: publicDirectives[type],
       expression: parsed.expression,
       filters: parsed.filters
@@ -715,6 +739,7 @@ function compileDirectives (attrs, options) {
     } else
 
     // event handlers
+    // const onRE = /^v-on:|^@/
     if (onRE.test(name)) {
       arg = name.replace(onRE, '')
       pushDir('on', publicDirectives.on)

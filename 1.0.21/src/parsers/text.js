@@ -55,6 +55,7 @@ export function parseText (text) {
   if (!tagRE.test(text)) {
     return null
   }
+  // 处理插值文本节点（ {{world}} ）
   var tokens = []
   var lastIndex = tagRE.lastIndex = 0
   var match, index, html, value, first, oneTime
@@ -72,6 +73,7 @@ export function parseText (text) {
     html = htmlRE.test(match[0])
     value = html ? match[1] : match[2]
     first = value.charCodeAt(0)
+    // 为何要判断 * ？
     oneTime = first === 42 // *
     value = oneTime
       ? value.slice(1)

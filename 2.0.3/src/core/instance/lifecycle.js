@@ -60,7 +60,10 @@ export function lifecycleMixin (Vue: Class<Component>) {
       }
     }
     callHook(vm, 'beforeMount')
+    // https://github.com/DDFE/DDFE-blog/issues/18
+    // 实例化 Watcher ，两个执行时机：1.初始化时执行；2.检测数据变化后再次执行。
     vm._watcher = new Watcher(vm, () => {
+      // render 函数渲染成新虚拟 DOM，update 里就是新旧虚拟 DOM 的 diff 过程。
       vm._update(vm._render(), hydrating)
     }, noop)
     hydrating = false
@@ -81,11 +84,16 @@ export function lifecycleMixin (Vue: Class<Component>) {
     const prevEl = vm.$el
     const prevActiveInstance = activeInstance
     activeInstance = vm
+    // 旧 Vnode
     const prevVnode = vm._vnode
+    // 新 Vnode
     vm._vnode = vnode
     if (!prevVnode) {
+      // 初次渲染
+
       // Vue.prototype.__patch__ is injected in entry points
       // based on the rendering backend used.
+      // Diff 过程
       vm.$el = vm.__patch__(vm.$el, vnode, hydrating)
     } else {
       vm.$el = vm.__patch__(prevVnode, vnode)
@@ -195,6 +203,7 @@ export function lifecycleMixin (Vue: Class<Component>) {
 export function callHook (vm: Component, hook: string) {
   const handlers = vm.$options[hook]
   if (handlers) {
+    // 兼顾这里 mixin 后会有多个同名生命周期函数
     for (let i = 0, j = handlers.length; i < j; i++) {
       handlers[i].call(vm)
     }
