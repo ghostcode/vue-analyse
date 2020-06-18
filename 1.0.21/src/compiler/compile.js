@@ -112,6 +112,7 @@ function linkAndCapture (linker, vm) {
   var dirs = vm._directives.slice(originalDirCount)
   dirs.sort(directiveComparator)
   for (var i = 0, l = dirs.length; i < l; i++) {
+    // 触发创建 watcher 实例的地方
     dirs[i]._bind()
   }
   return dirs

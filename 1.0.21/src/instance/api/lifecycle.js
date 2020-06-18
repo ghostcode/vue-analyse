@@ -24,6 +24,7 @@ export default function (Vue) {
     if (!el) {
       el = document.createElement('div')
     }
+    // 这里开始编译模板
     this._compile(el)
     this._initDOMHooks()
     if (inDoc(this.$el)) {

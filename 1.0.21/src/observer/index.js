@@ -86,7 +86,7 @@ Observer.prototype.walk = function (obj) {
 
 Observer.prototype.observeArray = function (items) {
   for (var i = 0, l = items.length; i < l; i++) {
-    obsezrve(items[i])
+    observe(items[i])
   }
 }
 
