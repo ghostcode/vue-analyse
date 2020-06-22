@@ -1,10 +1,12 @@
 import { def, indexOf } from '../util/index'
 
 const arrayProto = Array.prototype
+// 继承原数组的原型对象
 export const arrayMethods = Object.create(arrayProto)
 
 /**
  * Intercept mutating methods and emit events
+ * 拦截数组更改自身的方法和触发事件
  */
 
 ;[
@@ -27,6 +29,7 @@ export const arrayMethods = Object.create(arrayProto)
     while (i--) {
       args[i] = arguments[i]
     }
+    // 执行原生的方法，并得到计算结果
     var result = original.apply(this, args)
     var ob = this.__ob__
     var inserted

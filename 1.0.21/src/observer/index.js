@@ -87,7 +87,7 @@ Observer.prototype.walk = function (obj) {
 
 Observer.prototype.observeArray = function (items) {
   for (var i = 0, l = items.length; i < l; i++) {
-    obsezrve(items[i])
+    observe(items[i])
   }
 }
 
@@ -226,6 +226,7 @@ export function defineReactive (obj, key, val) {
     //  依赖收集（把所有依赖此数据项的Watcher添加进数组）
     get: function reactiveGetter () {
       var value = getter ? getter.call(obj) : val
+      // Dep.target 其实就是 watcher
       if (Dep.target) {
         //  添加进依赖数组
         //   Dep.prototype.depend = function () {
