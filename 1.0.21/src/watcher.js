@@ -107,6 +107,11 @@ Watcher.prototype.get = function () {
   }
   // "touch" every property so they are all tracked as
   // dependencies for deep watching
+
+  // vm.$watch('someObject', callback, {
+  //   deep: true
+  // })
+  // vm.someObject.nestedValue = 123
   if (this.deep) {
     traverse(value)
   }
@@ -342,6 +347,7 @@ Watcher.prototype.depend = function () {
 
 /**
  * Remove self from all dependencies' subcriber list.
+ * 将自身从依赖中移出
  */
 
 Watcher.prototype.teardown = function () {
