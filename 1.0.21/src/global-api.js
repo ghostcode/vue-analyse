@@ -89,6 +89,7 @@ export default function (Vue) {
 
   Vue.extend = function (extendOptions) {
     extendOptions = extendOptions || {}
+    // Vue 自身
     var Super = this
     var isFirstExtend = Super.cid === 0
     if (isFirstExtend && extendOptions._Ctor) {
@@ -105,6 +106,7 @@ export default function (Vue) {
       }
     }
     var Sub = createClass(name || 'VueComponent')
+    // 继承 Vue 
     Sub.prototype = Object.create(Super.prototype)
     Sub.prototype.constructor = Sub
     Sub.cid = cid++

@@ -6,6 +6,7 @@
 import { def } from '../util/index'
 
 const arrayProto = Array.prototype
+// 继承 数组的原型对象
 export const arrayMethods = Object.create(arrayProto)
 
 /**
@@ -23,6 +24,7 @@ export const arrayMethods = Object.create(arrayProto)
 .forEach(function (method) {
   // cache original method
   const original = arrayProto[method]
+  // 覆盖数组的原生方法，hook 机制
   def(arrayMethods, method, function mutator () {
     // avoid leaking arguments:
     // http://jsperf.com/closure-with-arguments
@@ -45,8 +47,10 @@ export const arrayMethods = Object.create(arrayProto)
         inserted = args.slice(2)
         break
     }
+    // 把添加的数据变成响应式的
     if (inserted) ob.observeArray(inserted)
     // notify change
+    // 在拦截器函数里，数组变动通知更新的地方
     ob.dep.notify()
     return result
   })

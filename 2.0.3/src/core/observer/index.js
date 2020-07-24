@@ -43,7 +43,10 @@ export class Observer {
     def(value, '__ob__', this)
     if (Array.isArray(value)) {
       const augment = hasProto
+        // 覆盖原型方法
         ? protoAugment
+        // 直接把 hook 的方法附加到数组上
+        // [].push = function(){ }
         : copyAugment
       augment(value, arrayMethods, arrayKeys)
       this.observeArray(value)
@@ -185,15 +188,19 @@ export function defineReactive (
  * already exist.
  */
 export function set (obj: Array<any> | Object, key: any, val: any) {
+  // 数组处理
   if (Array.isArray(obj)) {
+    // 通过处理过的 splice 方法添加
     obj.splice(key, 1, val)
     return val
   }
+  // 已经存在，则直接赋值
   if (hasOwn(obj, key)) {
     obj[key] = val
     return
   }
   const ob = obj.__ob__
+  // Vue 实例 和 根实例的数据对象 则提示
   if (obj._isVue || (ob && ob.vmCount)) {
     process.env.NODE_ENV !== 'production' && warn(
       'Avoid adding reactive properties to a Vue instance or its root $data ' +
@@ -226,6 +233,7 @@ export function del (obj: Object, key: string) {
     return
   }
   delete obj[key]
+  // 判断数据本身是不是响应式的，非响应式数据直接执行删除
   if (!ob) {
     return
   }

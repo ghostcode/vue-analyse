@@ -41,13 +41,17 @@ export function withoutConversion (fn) {
 export function Observer (value) {
   this.value = value
   // 创建收集筐，这里为何要实例化一个 dep ???
+  // 为了收集数组的依赖
   this.dep = new Dep()
-  //  添加__ob__属性，标识数据已经被Observer观察过
+  //  添加__ob__属性，1.标识数据已经被Observer观察过;2.通过响应式的数据获取到 Observer 实例
   def(value, '__ob__', this)
+  // 区分对象和数组，走不同的响应式遍历方法
   if (isArray(value)) {
     var augment = hasProto
       ? protoAugment
       : copyAugment
+    // 避免直接覆盖全局 Array 原型的方法，所以这里只覆盖即将转换为响应式 Array 类型数据的原型
+    // value.__proto__ = arrayMethods
     augment(value, arrayMethods, arrayKeys)
     this.observeArray(value)
   } else {
@@ -198,10 +202,7 @@ export function observe (value, vm) {
   ) {
     ob = value.__ob__
   } else if (
-    shouldConvert &&
-    (isArray(value) || isPlainObject(value)) &&
-    Object.isExtensible(value) &&
-    !value._isVue
+    shouldConvert && (isArray(value) || isPlainObject(value)) && Object.isExtensible(value) && !value._isVue
   ) {
     ob = new Observer(value)
   }
@@ -241,6 +242,7 @@ export function defineReactive (obj, key, val) {
     //  依赖收集（把所有依赖此数据项的Watcher添加进数组）
     get: function reactiveGetter () {
       var value = getter ? getter.call(obj) : val
+      // Dep.target 其实就是 watcher
       if (Dep.target) {
         //  添加进依赖数组
         //   Dep.prototype.depend = function () {

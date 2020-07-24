@@ -25,6 +25,7 @@ export default function (Vue) {
     //  子 vue 实例的引用
     this.$refs = {}       // child vm references
     this.$els = {}        // element references
+    
     this._watchers = []   // all watchers as an array
     this._directives = [] // all directives
 

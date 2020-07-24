@@ -296,7 +296,7 @@ function compileNode (node, options) {
   var type = node.nodeType
 
   if (type === 1 && node.tagName !== 'SCRIPT') {
-    // 非 script 的普通标签
+    // 非 script 的元素标签
     return compileElement(node, options)
   } else if (type === 3 && node.data.trim()) {
     // 非空文本节点

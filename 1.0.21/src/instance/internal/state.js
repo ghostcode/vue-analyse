@@ -24,7 +24,6 @@ export default function (Vue) {
 
   Object.defineProperty(Vue.prototype, '$data', {
     get () {
-      // 这里就是 
       return this._data
     },
     set (newData) {
