@@ -163,12 +163,15 @@ export function lifecycleMixin (Vue: Class<Component>) {
 
   Vue.prototype.$destroy = function () {
     const vm: Component = this
+    // 避免多次反复执行
     if (vm._isBeingDestroyed) {
       return
     }
     callHook(vm, 'beforeDestroy')
     vm._isBeingDestroyed = true
     // remove self from parent
+    // 从父组件中移出自身
+    // 虽然一个组件可以有多个父组件，但是子组件在不同的父组件下面是不同的组件，所以一个子组件实例的父级只有一个
     const parent = vm.$parent
     if (parent && !parent._isBeingDestroyed && !vm.$options.abstract) {
       remove(parent.$children, vm)

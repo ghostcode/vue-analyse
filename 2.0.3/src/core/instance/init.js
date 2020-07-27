@@ -10,6 +10,7 @@ import { mergeOptions } from '../util/index'
 let uid = 0
 
 export function initMixin (Vue: Class<Component>) {
+  // 整个 Vue 的入口
   Vue.prototype._init = function (options?: Object) {
     const vm: Component = this
     // a uid
@@ -38,6 +39,7 @@ export function initMixin (Vue: Class<Component>) {
     // expose real self
     vm._self = vm
     initLifecycle(vm)
+    // 注入 vm._events
     initEvents(vm)
     callHook(vm, 'beforeCreate')
     // 包括如下操作：
