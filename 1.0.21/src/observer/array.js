@@ -33,6 +33,7 @@ export const arrayMethods = Object.create(arrayProto)
     var result = original.apply(this, args)
     var ob = this.__ob__
     var inserted
+    // 对于新增元素需要变为响应式
     switch (method) {
       case 'push':
         inserted = args

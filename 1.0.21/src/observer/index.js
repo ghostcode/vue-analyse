@@ -55,6 +55,13 @@ export function Observer (value) {
     augment(value, arrayMethods, arrayKeys)
     this.observeArray(value)
   } else {
+    // data(){
+    //   return {
+    //     a:1,
+    //     b:[1,2,3]
+    //   }
+    // }
+    // 第一次都会走这里
     this.walk(value)
   }
 }
@@ -72,15 +79,23 @@ export function Observer (value) {
  */
 
 Observer.prototype.walk = function (obj) {
+  // 遍历每个属性
+  // data(){
+  //   return {
+  //     a:1,
+  //     b:[1,2,3]
+  //   }
+  // }
+  // 逐个遍历上面的属性 a 和 b
   var keys = Object.keys(obj)
+  for (var i = 0, l = keys.length; i < l; i++) {
+    this.convert(keys[i], obj[keys[i]])
+  }
+
   //  为何不用forEach???
   //   Object.keys(obj).forEach(key=>{
   //       this.convert(key,obj[key])
   //   })
-  // 遍历每个属性
-  for (var i = 0, l = keys.length; i < l; i++) {
-    this.convert(keys[i], obj[keys[i]])
-  }
 }
 
 /**
