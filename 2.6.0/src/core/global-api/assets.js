@@ -7,11 +7,17 @@ export function initAssetRegisters (Vue: GlobalAPI) {
   /**
    * Create asset registration methods.
    */
+  // export const ASSET_TYPES = [
+  //   'component',
+  //   'directive',
+  //   'filter'
+  // ]
   ASSET_TYPES.forEach(type => {
     Vue[type] = function (
       id: string,
       definition: Function | Object
     ): Function | Object | void {
+      // 若没有定义，则是获取
       if (!definition) {
         return this.options[type + 's'][id]
       } else {
@@ -20,6 +26,7 @@ export function initAssetRegisters (Vue: GlobalAPI) {
           validateComponentName(id)
         }
         if (type === 'component' && isPlainObject(definition)) {
+          // 优先使用 name 属性
           definition.name = definition.name || id
           definition = this.options._base.extend(definition)
         }

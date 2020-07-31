@@ -33,6 +33,7 @@ export function eventsMixin (Vue: Class<Component>) {
     }
     // 为了 $off 移除时，对比用户提供的监听器和事件列表里的方法一致
     on.fn = fn
+    // 注册到监听器列表的函数其实是我们的拦截器函数 on,
     vm.$on(event, on)
     return vm
   }
@@ -63,7 +64,7 @@ export function eventsMixin (Vue: Class<Component>) {
     // 从后向前遍历，
     while (i--) {
       cb = cbs[i]
-      // cb.fn === fn 主要是为了 $once 里的 $off 时方法一致
+      // cb.fn === fn 主要是因为 $once 时，注册到事件列表的函数是拦截器 on ,而不是用户提供的监听器函数
       if (cb === fn || cb.fn === fn) {
         cbs.splice(i, 1)
         break

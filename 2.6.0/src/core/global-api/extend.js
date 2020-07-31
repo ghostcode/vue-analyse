@@ -18,9 +18,12 @@ export function initExtend (Vue: GlobalAPI) {
    */
   Vue.extend = function (extendOptions: Object): Function {
     extendOptions = extendOptions || {}
+    // Vue
     const Super = this
     const SuperId = Super.cid
+    // 缓存构造函数
     const cachedCtors = extendOptions._Ctor || (extendOptions._Ctor = {})
+    // 有缓存直接返回
     if (cachedCtors[SuperId]) {
       return cachedCtors[SuperId]
     }
@@ -31,15 +34,20 @@ export function initExtend (Vue: GlobalAPI) {
     }
 
     const Sub = function VueComponent (options) {
+      // 这里就是调用初始化 Vue 时 initMixin 里的方法
       this._init(options)
     }
+    // 子类继承 Vue,获得 Vue 相关的属性和能力
     Sub.prototype = Object.create(Super.prototype)
+    // 重新指回原来的构造函数
     Sub.prototype.constructor = Sub
     Sub.cid = cid++
+    // 选项合并，这里的 options 在哪地方使用的？？？
     Sub.options = mergeOptions(
       Super.options,
       extendOptions
     )
+    // 关联指向关系
     Sub['super'] = Super
 
     // For props and computed properties, we define the proxy getters on
@@ -75,7 +83,9 @@ export function initExtend (Vue: GlobalAPI) {
     Sub.sealedOptions = extend({}, Sub.options)
 
     // cache constructor
+    // 使用父类的 cid 作为唯一值来缓存构造函数，提高性能
     cachedCtors[SuperId] = Sub
+    // 返回 Vue 的子类
     return Sub
   }
 }

@@ -45,6 +45,7 @@ export const isBuiltInTag = makeMap('slot,component', true)
 
 /**
  * Remove an item from an array
+ * 从数组中删除一个元素
  */
 export function remove (arr: Array<any>, item: any): Array<any> | void {
   if (arr.length) {

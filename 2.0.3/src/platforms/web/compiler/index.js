@@ -66,14 +66,17 @@ export function compileToFunctions (
       }
     }
   }
-  const key = options && options.delimiters
-    ? String(options.delimiters) + template
-    : template
+  const key = options && options.delimiters ? String(options.delimiters) + template : template
   // 先读缓存
   if (cache[key]) {
     return cache[key]
   }
   const res = {}
+  // return {
+  //   ast,
+  //   render: code.render,
+  //   staticRenderFns: code.staticRenderFns
+  // }
   const compiled = compile(template, options)
   // 通过 new Function 的方式生成 render 函数并缓存
   res.render = makeFunction(compiled.render)

@@ -28,6 +28,8 @@ function isNative (Ctor: Function): boolean {
 
 /**
  * Defer a task to execute it asynchronously.
+ * 降级处理
+ * promise.then -> MutationObserver -> setTimeout
  */
 export const nextTick = (function () {
   const callbacks = []
