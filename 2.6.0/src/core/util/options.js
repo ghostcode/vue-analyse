@@ -316,7 +316,20 @@ function normalizeProps (options: Object, vm: ?Component) {
       val = props[key]
       name = camelize(key)
       res[name] = isPlainObject(val)
+        // {
+        //   prop:{
+        //     type:String,
+        //     required:true,
+        //   }
+        // }
         ? val
+        // {
+        //   prop:String
+        // }
+        //
+        // {
+        //   prop:[String,Number]
+        // }
         : { type: val }
     }
   } else if (process.env.NODE_ENV !== 'production') {

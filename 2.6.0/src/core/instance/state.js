@@ -48,8 +48,11 @@ export function proxy (target: Object, sourceKey: string, key: string) {
 export function initState (vm: Component) {
   vm._watchers = []
   const opts = vm.$options
+  // 先初始化 props,后初始化 data,这样就可以在 data 中使用 props 的数据
+  // 同时也可以检测 data 中是否有和 props 、methods 重复的属性
   if (opts.props) initProps(vm, opts.props)
   if (opts.methods) initMethods(vm, opts.methods)
+
   if (opts.data) {
     initData(vm)
   } else {
@@ -129,7 +132,9 @@ function initData (vm: Component) {
   let i = keys.length
   while (i--) {
     const key = keys[i]
+    // 判断 methods 、props 中是否有重复的属性
     if (process.env.NODE_ENV !== 'production') {
+      // 若和 methods 相同只在非生产环境给提示，但依旧会代理属性
       if (methods && hasOwn(methods, key)) {
         warn(
           `Method "${key}" has already been defined as a data property.`,
@@ -137,12 +142,14 @@ function initData (vm: Component) {
         )
       }
     }
+    // 若和 props 重复则不代理，非生产环境还给出提示
     if (props && hasOwn(props, key)) {
       process.env.NODE_ENV !== 'production' && warn(
         `The data property "${key}" is already declared as a prop. ` +
         `Use prop default value instead.`,
         vm
       )
+    //  不能是以 $ 和 _ 开头
     } else if (!isReserved(key)) {
       proxy(vm, `_data`, key)
     }
