@@ -397,7 +397,17 @@ export function mergeOptions (
   if (typeof child === 'function') {
     child = child.options
   }
-
+  // 规格化 Prop 属性
+  // 都转换为对象形式
+  // {
+  //   props:[A,B]
+  // }
+  // {
+  //   props:{
+  //     A:{type:null},
+  //     B:{type:null},
+  //   }
+  // }
   normalizeProps(child, vm)
   normalizeInject(child, vm)
   normalizeDirectives(child)
