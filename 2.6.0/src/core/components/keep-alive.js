@@ -41,6 +41,7 @@ function pruneCacheEntry (
   current?: VNode
 ) {
   const cached = cache[key]
+  // 不是当前渲染的组件
   if (cached && (!current || cached.tag !== current.tag)) {
     cached.componentInstance.$destroy()
   }
@@ -88,6 +89,7 @@ export default {
       // check pattern
       const name: ?string = getComponentName(componentOptions)
       const { include, exclude } = this
+      // name 不在 include 中或者 name 在 exclude 中，则直接返回
       if (
         // not included
         (include && (!name || !matches(include, name))) ||

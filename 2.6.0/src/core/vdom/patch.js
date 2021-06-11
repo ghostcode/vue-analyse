@@ -581,14 +581,7 @@ export function createPatchFunction (backend) {
       vnode.parent.data.pendingInsert = queue
     } else {
       for (let i = 0; i < queue.length; ++i) {
-        queue[i].data.hook.insert(queue[i])
-      }
-    }
-  }
-
-  let hydrationBailed = false
-  // list of modules that can skip create hook during hydration because they
-  // are already rendered on the client or has no need for initialization
+        queue[i].data.hook.insert(queue[i])sameVnodeization
   // Note: style is excluded because it relies on initial clone for future
   // deep updates (#7063).
   const isRenderedModule = makeMap('attrs,class,staticClass,staticStyle,key')
