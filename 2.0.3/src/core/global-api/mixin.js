@@ -8,3 +8,4 @@ export function initMixin (Vue: GlobalAPI) {
     Vue.options = mergeOptions(Vue.options, mixin)
   }
 }
+

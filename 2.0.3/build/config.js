@@ -73,7 +73,7 @@ function genConfig (opts) {
     entry: opts.entry,
     dest: opts.dest,
     external: opts.external,
-    sourceMap:true,
+    // sourceMap:true,
     format: opts.format,
     banner: opts.banner,
     moduleName: 'Vue',

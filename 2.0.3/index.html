@@ -10,25 +10,38 @@
 <body>
   <div id="app">
     {{message}}
-    <!-- <hello></hello> -->
   </div>
   <script src="./dist/vue.js"></script>
   <script>
-    // Vue.component('hello', {
-    //   data: function () {
-    //     return {
-    //       message: 'hi',
+    // Vue.mixin({
+    //   methods: {
+    //     say() {
+    //       console.log('from mixin')
     //     }
-    //   },
-    //   template: '<strong>{{message}}</strong>'
+    //   }
     // })
 
     let vm = new Vue({
       el: '#app',
-      data:{
-        message:'hi',
+      mixins: [{
+        methods: {
+          say() {
+            console.log('from mixin');
+          }
+        }
+      }],
+      data: {
+        message: 'hi',
+        books: ['东方希望', '数字化部']
+      },
+      methods: {
+        say() {
+          console.log('from component')
+        }
       }
     })
+
+    vm.say()
   </script>
 </body>
 
