@@ -47,8 +47,8 @@
     ]
   },
   "devDependencies": {
-    "babel-core": "^5.8.0",
-    "babel-loader": "^5.4.0",
+    "babel-core": "^6.26.3",
+    "babel-loader": "^9.1.0",
     "babel-runtime": "^5.8.0",
     "casperjs": "^1.1.0-beta5",
     "codecov.io": "^0.1.2",
@@ -72,7 +72,7 @@
     "object-assign": "^4.0.1",
     "phantomjs": "^1.9.17",
     "rollup": "^0.25.1",
-    "rollup-plugin-babel": "^1.0.0",
+    "rollup-plugin-babel": "^4.4.0",
     "rollup-plugin-replace": "^1.1.0",
     "uglify-js": "^2.4.24",
     "webpack": "^1.12.2",
