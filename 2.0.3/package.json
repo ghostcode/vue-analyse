@@ -70,7 +70,7 @@
     "flow-bin": "^0.32.0",
     "he": "^1.1.0",
     "http-server": "^0.9.0",
-    "jasmine": "2.4.x",
+    "jasmine": "2.99.x",
     "jasmine-core": "2.4.x",
     "karma": "^1.1.0",
     "karma-chrome-launcher": "^2.0.0",
