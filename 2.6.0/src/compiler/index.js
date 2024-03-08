@@ -18,7 +18,7 @@ export const createCompiler = createCompilerCreator(function baseCompile (
     // 标记静态节点
     optimize(ast, options)
   }
-  //
+  // render 相关方法
   const code = generate(ast, options)
   return {
     ast,

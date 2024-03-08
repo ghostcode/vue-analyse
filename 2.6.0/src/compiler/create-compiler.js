@@ -69,6 +69,7 @@ export function createCompilerCreator (baseCompile: Function): Function {
 
     return {
       compile,
+      // 编译模板的方法
       compileToFunctions: createCompileToFunctionFn(compile)
     }
   }
