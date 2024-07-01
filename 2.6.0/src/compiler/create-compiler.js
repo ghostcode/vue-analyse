@@ -4,6 +4,12 @@ import { extend } from 'shared/util'
 import { detectErrors } from './error-detector'
 import { createCompileToFunctionFn } from './to-function'
 
+/**
+ * 创建编译器创建器
+ *
+ * @param baseCompile 基础编译函数
+ * @returns 返回一个创建编译器的函数
+ */
 export function createCompilerCreator (baseCompile: Function): Function {
   return function createCompiler (baseOptions: CompilerOptions) {
     function compile (
@@ -69,7 +75,7 @@ export function createCompilerCreator (baseCompile: Function): Function {
 
     return {
       compile,
-      // 编译模板的方法
+      // 编译模板的方法(这个方法对应的就是 $mount 里的 compileToFunctions)
       compileToFunctions: createCompileToFunctionFn(compile)
     }
   }
