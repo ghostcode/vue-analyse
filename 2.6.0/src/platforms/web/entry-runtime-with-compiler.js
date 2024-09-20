@@ -13,7 +13,7 @@ const idToTemplate = cached(id => {
   const el = query(id)
   return el && el.innerHTML
 })
-
+// 这个就是只有运行时的 $mount
 const mount = Vue.prototype.$mount
 // hook (函数劫持) 原 mount 方法
 Vue.prototype.$mount = function (
@@ -36,6 +36,7 @@ Vue.prototype.$mount = function (
   // 解析 template/el 为渲染函数
   if (!options.render) {
     let template = options.template
+
     // 优先使用 template
     if (template) {
       if (typeof template === 'string') {
@@ -61,6 +62,8 @@ Vue.prototype.$mount = function (
     } else if (el) {
       template = getOuterHTML(el)
     }
+
+
     if (template) {
       /* istanbul ignore if */
       if (process.env.NODE_ENV !== 'production' && config.performance && mark) {

@@ -51,8 +51,6 @@ export class Observer {
           copyAugment;
 
       augment(value, arrayMethods, arrayKeys);
-
-
       this.observeArray(value);
     } else {
       this.walk(value);
@@ -157,6 +155,7 @@ export function defineReactive(
     get: function reactiveGetter() {
       const value = getter ? getter.call(obj) : val;
       if (Dep.target) {
+        // 这里并没有显示的把 watcher 传入 depend 函数，那是如何手机的？
         dep.depend();
         if (childOb) {
           childOb.dep.depend();
@@ -199,6 +198,12 @@ export function set(obj: Array<any> | Object, key: any, val: any) {
     return val;
   }
   // 已经存在，则直接赋值
+  // 已经存在，之后再用 set 操作数据也可能不是响应的。
+
+  // 某些操作中，直接给对象设置新属性
+  // this.person.age = 18
+  // 后续再执行set，则age依旧为非响应式 😭
+  // this.$set(this.person, 'age', 18) 
   if (hasOwn(obj, key)) {
     obj[key] = val;
     return;

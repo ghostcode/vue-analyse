@@ -85,7 +85,7 @@ function initData(vm: Component) {
       proxy(vm, keys[i]);
     }
   }
-  // observe data
+  // observe data 变为响应式数据
   observe(data);
   data.__ob__ && data.__ob__.vmCount++;
 }

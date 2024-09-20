@@ -4,35 +4,39 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>Vue 2.0 部分源码分析</title>
 </head>
 
 <body>
   <div id="app">
     {{message}}
+    <div v-for="item in books">{{item}}</div>
   </div>
   <script src="./dist/vue.js"></script>
   <script>
-    // Vue.mixin({
-    //   methods: {
-    //     say() {
-    //       console.log('from mixin')
-    //     }
-    //   }
-    // })
+    Vue.mixin({
+      methods: {
+        say() {
+          console.log('from mixin')
+        }
+      }
+    })
 
     let vm = new Vue({
       el: '#app',
-      mixins: [{
-        methods: {
-          say() {
-            console.log('from mixin');
-          }
-        }
-      }],
+      // mixins: [{
+      //   methods: {
+      //     say() {
+      //       console.log('from mixin');
+      //     }
+      //   }
+      // }],
       data: {
-        message: 'hi',
+        message: 'Hello Vue.js',
         books: ['东方希望', '数字化部']
+      },
+      created(){
+
       },
       methods: {
         say() {

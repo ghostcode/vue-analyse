@@ -182,7 +182,7 @@ function genDirectives (el: ASTElement): string | void {
     needRuntime = true
     const gen = platformDirectives[dir.name] || baseDirectives[dir.name]
     if (gen) {
-      // compile-time directive that manipulates AST.
+      // compile-tneedRuntimeime directive that manipulates AST.
       // returns true if it also needs a runtime counterpart.
       needRuntime = !!gen(el, dir, warn)
     }
