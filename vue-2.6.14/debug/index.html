@@ -11,9 +11,41 @@
 <body>
 <div id="app">
   {{ msg }}
-  button: <button @click="msg = 'hello vue'">change msg</button>
+  <my-button @blur="handleBlur" @dblclick="hanldeDblClick" loading name="按钮名字" @click="handleClick"></my-button>
 </div>
 <script>
+  Vue.component('my-button', {
+    template: '<button v-on="reFormatListeners">{{name}}----{{loading}} </button>',
+    props: {
+      name:String,
+      loading: Boolean,
+    },
+    data(){
+      return {
+        test: '123'
+      }
+    },
+    computed: {
+      reFormatListeners(){
+        return Object.assign({}, this.$listeners, {
+          click: this.emitClick
+        })
+      }
+    },
+    created() {
+      console.log(this.reFormatListeners)
+    },
+    methods: {
+      emitClick(){
+        // console.log('>>>>内部click')
+        if (this.loading) {
+          return
+        }
+        this.$emit('click');
+      }
+    }
+  })
+
   const vm = new Vue({
     el: '#app',
     data() {
@@ -22,7 +54,17 @@
       };
     },
     created() {
-      console.log('>>>>>')
+    },
+    methods: {
+      handleClick(){
+        console.log('外部click')
+      },
+      hanldeDblClick(){
+        console.log('外部dblclick')
+      },
+      handleBlur(){
+        console.log('外部handleBlur')
+      },
     }
   });
 </script>
