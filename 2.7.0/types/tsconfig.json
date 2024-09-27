@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "experimentalDecorators": true,
+    "lib": ["dom", "esnext"],
+    "types": ["node"],
+    "module": "esnext",
+    "moduleResolution": "node",
+    "jsx": "preserve",
+    "strict": true,
+    "noEmit": true,
+    "baseUrl": ".",
+    "paths": {
+      "vue": ["../index.d.ts"]
+    }
+  },
+  "include": ["."],
+  "compileOnSave": false
+}
