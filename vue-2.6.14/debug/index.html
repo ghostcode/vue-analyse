@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vue debugger</title>
+  <script src="../dist/vue.js"></script>
+</head>
+
+<body>
+<div id="app">
+  {{ msg }}
+  <my-button @blur="handleBlur" @dblclick="hanldeDblClick" loading name="按钮名字" @click="handleClick"></my-button>
+</div>
+<script>
+  Vue.component('my-button', {
+    template: '<button v-on="reFormatListeners">{{name}}----{{loading}} </button>',
+    props: {
+      name:String,
+      loading: Boolean,
+    },
+    data(){
+      return {
+        test: '123'
+      }
+    },
+    computed: {
+      reFormatListeners(){
+        return Object.assign({}, this.$listeners, {
+          click: this.emitClick
+        })
+      }
+    },
+    created() {
+      console.log(this.reFormatListeners)
+    },
+    methods: {
+      emitClick(){
+        // console.log('>>>>内部click')
+        if (this.loading) {
+          return
+        }
+        this.$emit('click');
+      }
+    }
+  })
+
+  const vm = new Vue({
+    el: '#app',
+    data() {
+      return {
+        msg: 'hello world',
+      };
+    },
+    created() {
+    },
+    methods: {
+      handleClick(){
+        console.log('外部click')
+      },
+      hanldeDblClick(){
+        console.log('外部dblclick')
+      },
+      handleBlur(){
+        console.log('外部handleBlur')
+      },
+    }
+  });
+</script>
+</body>
+
+</html>

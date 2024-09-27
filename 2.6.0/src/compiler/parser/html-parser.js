@@ -50,6 +50,13 @@ function decodeAttr (value, shouldDecodeNewlines) {
   return value.replace(re, match => decodingMap[match])
 }
 
+/**
+ * 解析HTML模板，将模板转化为虚拟DOM节点
+ *
+ * @param html HTML模板字符串
+ * @param options 解析选项
+ * @returns 虚拟DOM节点数组
+ */
 export function parseHTML (html, options) {
   const stack = []
   const expectHTML = options.expectHTML
@@ -57,11 +64,14 @@ export function parseHTML (html, options) {
   const canBeLeftOpenTag = options.canBeLeftOpenTag || no
   let index = 0
   let last, lastTag
+  // 循环解析 template 字符串
   while (html) {
     last = html
     // Make sure we're not in a plaintext content element like script/style
     if (!lastTag || !isPlainTextElement(lastTag)) {
+
       let textEnd = html.indexOf('<')
+
       if (textEnd === 0) {
         // Comment:
         if (comment.test(html)) {
@@ -178,6 +188,11 @@ export function parseHTML (html, options) {
   // Clean up any remaining tags
   parseEndTag()
 
+  // 把匹配到的字符串切割掉
+  // 匹配头标签之前 html：
+  // <div :class="c" class="demo" v-if="isShow"><span v-for="item in sz">{{item}}</span></div>
+  // 匹配头标签之后 html：
+  // <span v-for="item in sz">{{item}}</span></div>
   function advance (n) {
     index += n
     html = html.substring(n)

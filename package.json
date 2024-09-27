@@ -1,0 +1,20 @@
+{
+  "name": "vue-analyse",
+  "version": "1.0.0",
+  "description": "先分析的是 1.x 版本，后续再分析 2.x。",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ghostcode/vue-analyse.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ghostcode/vue-analyse/issues"
+  },
+  "homepage": "https://github.com/ghostcode/vue-analyse#readme"
+}

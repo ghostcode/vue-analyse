@@ -20,7 +20,7 @@ function createFunction (code, errors) {
 
 export function createCompileToFunctionFn (compile: Function): Function {
   const cache = Object.create(null)
-
+  // 编译模板的真正地方
   return function compileToFunctions (
     template: string,
     options?: CompilerOptions,
@@ -57,6 +57,7 @@ export function createCompileToFunctionFn (compile: Function): Function {
     }
 
     // compile
+    // 就是它！
     const compiled = compile(template, options)
 
     // check compilation errors/tips

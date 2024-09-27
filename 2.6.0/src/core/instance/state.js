@@ -102,12 +102,16 @@ function initProps(vm: Component, propsOptions: Object) {
         }
       });
     } else {
+      // const props = (vm._props = {});
+      // 将键和值通过 defineReactive 函数添加到 props（即vm._props）中
       defineReactive(props, key, value);
     }
     // static props are already proxied on the component's prototype
     // during Vue.extend(). We only need to proxy props defined at
     // instantiation here.
-    // vm.x 实际访问的是 vm._props.x
+
+    // 判断这个key在当前实例vm中是否存在，如果不存在，则调用proxy函数在vm上设置一个以key为属性的代码，
+    // 当使用vm[key]访问数据时，其实访问的是vm._props[key]
     if (!(key in vm)) {
       proxy(vm, `_props`, key);
     }
@@ -296,6 +300,7 @@ function initMethods(vm: Component, methods: Object) {
         );
       }
     }
+    // 绑定方法到实例上同时把方法中的 this 绑定为 vm 实例
     vm[key] =
       typeof methods[key] !== "function" ? noop : bind(methods[key], vm);
   }
