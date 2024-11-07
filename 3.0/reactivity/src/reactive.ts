@@ -13,6 +13,7 @@ import {
 } from './collectionHandlers'
 import type { UnwrapRefSimple, Ref, RawSymbol } from './ref'
 
+// 标记目标对象 target 类型的 ReactiveFlags
 export const enum ReactiveFlags {
   SKIP = '__v_skip',
   IS_REACTIVE = '__v_isReactive',

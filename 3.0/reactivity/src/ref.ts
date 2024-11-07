@@ -77,6 +77,7 @@ export function triggerRefValue(ref: RefBase<any>, newVal?: any) {
  */
 export function isRef<T>(r: Ref<T> | unknown): r is Ref<T>
 export function isRef(r: any): r is Ref {
+  // 根据特征检测
   return !!(r && r.__v_isRef === true)
 }
 
@@ -209,6 +210,7 @@ export type MaybeRefOrGetter<T = any> = MaybeRef<T> | (() => T)
  * @see {@link https://vuejs.org/api/reactivity-utilities.html#unref}
  */
 export function unref<T>(ref: MaybeRef<T>): T {
+  // 是 ref 则返回 value，否则返回自身
   return isRef(ref) ? ref.value : ref
 }
 
