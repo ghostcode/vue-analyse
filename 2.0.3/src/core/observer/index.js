@@ -45,10 +45,10 @@ export class Observer {
 
       const augment = hasProto
         ? // 覆盖原型方法
-          protoAugment
+        protoAugment
         : // 直接把 hook 的方法附加到数组上
-          // [].push = function(){ }
-          copyAugment;
+        // [].push = function(){ }
+        copyAugment;
 
       augment(value, arrayMethods, arrayKeys);
       this.observeArray(value);
@@ -155,7 +155,7 @@ export function defineReactive(
     get: function reactiveGetter() {
       const value = getter ? getter.call(obj) : val;
       if (Dep.target) {
-        // 这里并没有显示的把 watcher 传入 depend 函数，那是如何手机的？
+        // 这里并没有显示的把 watcher 传入 depend 函数，那是如何实现的？
         dep.depend();
         if (childOb) {
           childOb.dep.depend();
@@ -198,7 +198,7 @@ export function set(obj: Array<any> | Object, key: any, val: any) {
     return val;
   }
   // 已经存在，则直接赋值
-  
+
   // https://juejin.cn/post/7124835773873913893#heading-12
   // 某些操作中，直接给对象设置新属性
   // this.person.age = 18
@@ -214,7 +214,7 @@ export function set(obj: Array<any> | Object, key: any, val: any) {
     process.env.NODE_ENV !== "production" &&
       warn(
         "Avoid adding reactive properties to a Vue instance or its root $data " +
-          "at runtime - declare it upfront in the data option."
+        "at runtime - declare it upfront in the data option."
       );
     return;
   }
@@ -236,7 +236,7 @@ export function del(obj: Object, key: string) {
     process.env.NODE_ENV !== "production" &&
       warn(
         "Avoid deleting properties on a Vue instance or its root $data " +
-          "- just set it to null."
+        "- just set it to null."
       );
     return;
   }
